@@ -1,14 +1,23 @@
 {
-  "name": "saws-analytics-backend",
+  "name": "saws-backend",
   "version": "1.0.0",
-  "description": "Mock analytics API for SAWS Sprint 2 (Analytics & AI module)",
+  "description": "Unified SAWS backend: Analytics, Feedback, Services, and Chatbot (Lex) APIs",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "nodemon server.js"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.19.2"
+    "@aws-sdk/client-lex-runtime-v2": "^3.1083.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

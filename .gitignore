@@ -23,7 +23,7 @@ messaging-notifications/infra/.build/
 messaging-notifications/infra/crash.log
 messaging-notifications/infra/tfplan*
 
-# Node (frontend)
+# Node
 node_modules/
 npm-debug.log*
 dist/
