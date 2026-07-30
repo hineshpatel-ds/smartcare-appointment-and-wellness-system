@@ -1,0 +1,38 @@
+stages:
+  - lint
+  - build
+  - test
+  - deploy
+
+variables:
+  TF_ROOT: ${CI_PROJECT_DIR}/terraform
+  FRONTEND_ROOT: ${CI_PROJECT_DIR}/frontend
+
+lint_frontend:
+  stage: lint
+  image: node:18
+  script:
+    - cd ${FRONTEND_ROOT}
+    - npm install
+    - npm run lint
+
+build_frontend:
+  stage: build
+  image: node:18
+  script:
+    - cd ${FRONTEND_ROOT}
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - ${FRONTEND_ROOT}/dist
+
+deploy_infrastructure:
+  stage: deploy
+  image: hashicorp/terraform:latest
+  script:
+    - cd ${TF_ROOT}
+    - terraform init
+    - terraform apply -auto-approve
+  only:
+    - main

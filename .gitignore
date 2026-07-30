@@ -1,0 +1,11 @@
+node_modules/
+.DS_Store
+dist/
+build/
+.env
+.codex_tmp/
+.terraform/
+*.tfstate
+*.tfstate.backup
+gcp-key.json
+gcp-key*.json

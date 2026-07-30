@@ -1,0 +1,802 @@
+{
+  "version": 4,
+  "terraform_version": "1.14.4",
+  "serial": 50,
+  "lineage": "9b2c057b-13cf-63df-35dc-9d411bd96c10",
+  "outputs": {},
+  "resources": [
+    {
+      "module": "module.analytics",
+      "mode": "managed",
+      "type": "google_cloud_run_service",
+      "name": "analytics",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google\"]",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "autogenerate_revision_name": false,
+            "id": "locations/us-central1/namespaces/saws-lambda-legends-503718/services/saws-analytics",
+            "location": "us-central1",
+            "metadata": [
+              {
+                "annotations": {},
+                "effective_annotations": {
+                  "run.googleapis.com/ingress": "all",
+                  "run.googleapis.com/ingress-status": "all",
+                  "run.googleapis.com/maxScale": "20",
+                  "run.googleapis.com/operation-id": "f5b49b41-645e-4faa-9324-a20cdf9c5ecb",
+                  "run.googleapis.com/urls": "[\"https://saws-analytics-474600405419.us-central1.run.app\",\"https://saws-analytics-lfp7yothla-uc.a.run.app\"]",
+                  "serving.knative.dev/creator": "terraform-gcp@saws-lambda-legends-503718.iam.gserviceaccount.com",
+                  "serving.knative.dev/lastModifier": "terraform-gcp@saws-lambda-legends-503718.iam.gserviceaccount.com"
+                },
+                "effective_labels": {
+                  "cloud.googleapis.com/location": "us-central1"
+                },
+                "generation": 1,
+                "labels": {},
+                "namespace": "saws-lambda-legends-503718",
+                "resource_version": "AAZXuY5gtHY",
+                "self_link": "/apis/serving.knative.dev/v1/namespaces/474600405419/services/saws-analytics",
+                "terraform_labels": {},
+                "uid": "f9c49955-2e1f-4bea-bb3d-5af76b32dd69"
+              }
+            ],
+            "name": "saws-analytics",
+            "project": "saws-lambda-legends-503718",
+            "status": [
+              {
+                "conditions": [
+                  {
+                    "message": "",
+                    "reason": "",
+                    "status": "True",
+                    "type": "Ready"
+                  },
+                  {
+                    "message": "",
+                    "reason": "",
+                    "status": "True",
+                    "type": "ConfigurationsReady"
+                  },
+                  {
+                    "message": "",
+                    "reason": "",
+                    "status": "True",
+                    "type": "RoutesReady"
+                  }
+                ],
+                "latest_created_revision_name": "saws-analytics-00001-hfd",
+                "latest_ready_revision_name": "saws-analytics-00001-hfd",
+                "observed_generation": 1,
+                "traffic": [
+                  {
+                    "latest_revision": true,
+                    "percent": 100,
+                    "revision_name": "saws-analytics-00001-hfd",
+                    "tag": "",
+                    "url": ""
+                  }
+                ],
+                "url": "https://saws-analytics-lfp7yothla-uc.a.run.app"
+              }
+            ],
+            "template": [
+              {
+                "metadata": [
+                  {
+                    "annotations": {},
+                    "generation": 0,
+                    "labels": {
+                      "run.googleapis.com/startupProbeType": "Default"
+                    },
+                    "name": "",
+                    "namespace": "",
+                    "resource_version": "",
+                    "self_link": "",
+                    "uid": ""
+                  }
+                ],
+                "spec": [
+                  {
+                    "container_concurrency": 80,
+                    "containers": [
+                      {
+                        "args": [],
+                        "command": [],
+                        "env": [],
+                        "env_from": [],
+                        "image": "gcr.io/saws-lambda-legends-503718/saws-analytics:latest",
+                        "liveness_probe": [],
+                        "name": "",
+                        "ports": [
+                          {
+                            "container_port": 8080,
+                            "name": "http1",
+                            "protocol": ""
+                          }
+                        ],
+                        "resources": [
+                          {
+                            "limits": {
+                              "cpu": "1000m",
+                              "memory": "512Mi"
+                            },
+                            "requests": {}
+                          }
+                        ],
+                        "startup_probe": [
+                          {
+                            "failure_threshold": 1,
+                            "grpc": [],
+                            "http_get": [],
+                            "initial_delay_seconds": 0,
+                            "period_seconds": 240,
+                            "tcp_socket": [
+                              {
+                                "port": 8080
+                              }
+                            ],
+                            "timeout_seconds": 240
+                          }
+                        ],
+                        "volume_mounts": [],
+                        "working_dir": ""
+                      }
+                    ],
+                    "service_account_name": "474600405419-compute@developer.gserviceaccount.com",
+                    "serving_state": "",
+                    "timeout_seconds": 300,
+                    "volumes": []
+                  }
+                ]
+              }
+            ],
+            "timeouts": null,
+            "traffic": [
+              {
+                "latest_revision": true,
+                "percent": 100,
+                "revision_name": "",
+                "tag": "",
+                "url": ""
+              }
+            ]
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMiJ9"
+        }
+      ]
+    },
+    {
+      "module": "module.analytics",
+      "mode": "managed",
+      "type": "google_project_service",
+      "name": "language_api",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "disable_dependent_services": null,
+            "disable_on_destroy": false,
+            "id": "saws-lambda-legends-503718/language.googleapis.com",
+            "project": "saws-lambda-legends-503718",
+            "service": "language.googleapis.com",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInJlYWQiOjYwMDAwMDAwMDAwMCwidXBkYXRlIjoxMjAwMDAwMDAwMDAwfX0="
+        }
+      ]
+    },
+    {
+      "module": "module.appointment",
+      "mode": "managed",
+      "type": "aws_api_gateway_rest_api",
+      "name": "api",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "api_key_source": "HEADER",
+            "arn": "arn:aws:apigateway:us-east-1::/restapis/w8dsc15zw4",
+            "binary_media_types": [],
+            "body": null,
+            "created_date": "2026-07-29T03:55:38Z",
+            "description": "",
+            "disable_execute_api_endpoint": false,
+            "endpoint_configuration": [
+              {
+                "ip_address_type": "ipv4",
+                "types": [
+                  "EDGE"
+                ],
+                "vpc_endpoint_ids": []
+              }
+            ],
+            "execution_arn": "arn:aws:execute-api:us-east-1:857527815114:w8dsc15zw4",
+            "fail_on_warnings": null,
+            "id": "w8dsc15zw4",
+            "minimum_compression_size": "",
+            "name": "saws-api",
+            "parameters": null,
+            "policy": "",
+            "put_rest_api_mode": null,
+            "root_resource_id": "fvs1afyyaa",
+            "tags": {},
+            "tags_all": {}
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "module": "module.appointment",
+      "mode": "managed",
+      "type": "aws_dynamodb_table",
+      "name": "appointments_table",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:dynamodb:us-east-1:857527815114:table/saws-appointments",
+            "attribute": [
+              {
+                "name": "appointmentId",
+                "type": "S"
+              }
+            ],
+            "billing_mode": "PAY_PER_REQUEST",
+            "deletion_protection_enabled": false,
+            "global_secondary_index": [],
+            "hash_key": "appointmentId",
+            "id": "saws-appointments",
+            "import_table": [],
+            "local_secondary_index": [],
+            "name": "saws-appointments",
+            "on_demand_throughput": [],
+            "point_in_time_recovery": [
+              {
+                "enabled": false,
+                "recovery_period_in_days": 0
+              }
+            ],
+            "range_key": null,
+            "read_capacity": 0,
+            "replica": [],
+            "restore_date_time": null,
+            "restore_source_name": null,
+            "restore_source_table_arn": null,
+            "restore_to_latest_time": null,
+            "server_side_encryption": [],
+            "stream_arn": "",
+            "stream_enabled": false,
+            "stream_label": "",
+            "stream_view_type": "",
+            "table_class": "STANDARD",
+            "tags": {},
+            "tags_all": {},
+            "timeouts": null,
+            "ttl": [
+              {
+                "attribute_name": "",
+                "enabled": false
+              }
+            ],
+            "write_capacity": 0
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjYwMDAwMDAwMDAwMCwidXBkYXRlIjozNjAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0="
+        }
+      ]
+    },
+    {
+      "module": "module.auth",
+      "mode": "managed",
+      "type": "aws_cognito_user_pool",
+      "name": "user_pool",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "account_recovery_setting": [
+              {
+                "recovery_mechanism": [
+                  {
+                    "name": "verified_email",
+                    "priority": 1
+                  },
+                  {
+                    "name": "verified_phone_number",
+                    "priority": 2
+                  }
+                ]
+              }
+            ],
+            "admin_create_user_config": [
+              {
+                "allow_admin_create_user_only": false,
+                "invite_message_template": []
+              }
+            ],
+            "alias_attributes": null,
+            "arn": "arn:aws:cognito-idp:us-east-1:857527815114:userpool/us-east-1_4Y9hfJx8Z",
+            "auto_verified_attributes": [
+              "email"
+            ],
+            "creation_date": "2026-07-29T04:50:52Z",
+            "custom_domain": "",
+            "deletion_protection": "INACTIVE",
+            "device_configuration": [],
+            "domain": "",
+            "email_configuration": [
+              {
+                "configuration_set": "",
+                "email_sending_account": "COGNITO_DEFAULT",
+                "from_email_address": "",
+                "reply_to_email_address": "",
+                "source_arn": ""
+              }
+            ],
+            "email_mfa_configuration": [],
+            "email_verification_message": "",
+            "email_verification_subject": "",
+            "endpoint": "cognito-idp.us-east-1.amazonaws.com/us-east-1_4Y9hfJx8Z",
+            "estimated_number_of_users": 0,
+            "id": "us-east-1_4Y9hfJx8Z",
+            "lambda_config": [],
+            "last_modified_date": "2026-07-29T04:50:52Z",
+            "mfa_configuration": "OFF",
+            "name": "saws-user-pool",
+            "password_policy": [
+              {
+                "minimum_length": 8,
+                "password_history_size": 0,
+                "require_lowercase": true,
+                "require_numbers": true,
+                "require_symbols": true,
+                "require_uppercase": true,
+                "temporary_password_validity_days": 7
+              }
+            ],
+            "schema": [
+              {
+                "attribute_data_type": "String",
+                "developer_only_attribute": false,
+                "mutable": true,
+                "name": "email",
+                "number_attribute_constraints": [],
+                "required": true,
+                "string_attribute_constraints": []
+              },
+              {
+                "attribute_data_type": "String",
+                "developer_only_attribute": false,
+                "mutable": true,
+                "name": "role",
+                "number_attribute_constraints": [],
+                "required": false,
+                "string_attribute_constraints": [
+                  {
+                    "max_length": null,
+                    "min_length": null
+                  }
+                ]
+              }
+            ],
+            "sign_in_policy": [
+              {
+                "allowed_first_auth_factors": [
+                  "PASSWORD"
+                ]
+              }
+            ],
+            "sms_authentication_message": "",
+            "sms_configuration": [],
+            "sms_verification_message": "",
+            "software_token_mfa_configuration": [],
+            "tags": {},
+            "tags_all": {},
+            "user_attribute_update_settings": [],
+            "user_pool_add_ons": [],
+            "user_pool_tier": "ESSENTIALS",
+            "username_attributes": [],
+            "username_configuration": [],
+            "verification_message_template": [
+              {
+                "default_email_option": "CONFIRM_WITH_CODE",
+                "email_message": "",
+                "email_message_by_link": "",
+                "email_subject": "",
+                "email_subject_by_link": "",
+                "sms_message": ""
+              }
+            ],
+            "web_authn_configuration": []
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "module": "module.auth",
+      "mode": "managed",
+      "type": "aws_cognito_user_pool_client",
+      "name": "user_pool_client",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "access_token_validity": 0,
+            "allowed_oauth_flows": [],
+            "allowed_oauth_flows_user_pool_client": false,
+            "allowed_oauth_scopes": [],
+            "analytics_configuration": [],
+            "auth_session_validity": 3,
+            "callback_urls": [],
+            "client_secret": "",
+            "default_redirect_uri": "",
+            "enable_propagate_additional_user_context_data": false,
+            "enable_token_revocation": true,
+            "explicit_auth_flows": [
+              "ALLOW_REFRESH_TOKEN_AUTH",
+              "ALLOW_USER_PASSWORD_AUTH",
+              "ALLOW_USER_SRP_AUTH"
+            ],
+            "generate_secret": false,
+            "id": "3hkbejisugfgtb2qpnfseaf9o5",
+            "id_token_validity": 0,
+            "logout_urls": [],
+            "name": "saws-client",
+            "prevent_user_existence_errors": "",
+            "read_attributes": [],
+            "refresh_token_rotation": [],
+            "refresh_token_validity": 30,
+            "supported_identity_providers": [],
+            "token_validity_units": [],
+            "user_pool_id": "us-east-1_4Y9hfJx8Z",
+            "write_attributes": []
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "client_secret"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "dependencies": [
+            "module.auth.aws_cognito_user_pool.user_pool"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.auth",
+      "mode": "managed",
+      "type": "aws_dynamodb_table",
+      "name": "users_table",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:dynamodb:us-east-1:857527815114:table/saws-users",
+            "attribute": [
+              {
+                "name": "userId",
+                "type": "S"
+              }
+            ],
+            "billing_mode": "PAY_PER_REQUEST",
+            "deletion_protection_enabled": false,
+            "global_secondary_index": [],
+            "hash_key": "userId",
+            "id": "saws-users",
+            "import_table": [],
+            "local_secondary_index": [],
+            "name": "saws-users",
+            "on_demand_throughput": [],
+            "point_in_time_recovery": [
+              {
+                "enabled": false,
+                "recovery_period_in_days": 0
+              }
+            ],
+            "range_key": null,
+            "read_capacity": 0,
+            "replica": [],
+            "restore_date_time": null,
+            "restore_source_name": null,
+            "restore_source_table_arn": null,
+            "restore_to_latest_time": null,
+            "server_side_encryption": [],
+            "stream_arn": "arn:aws:dynamodb:us-east-1:857527815114:table/saws-users/stream/2026-07-29T03:55:38.440",
+            "stream_enabled": true,
+            "stream_label": "2026-07-29T03:55:38.440",
+            "stream_view_type": "NEW_AND_OLD_IMAGES",
+            "table_class": "STANDARD",
+            "tags": {},
+            "tags_all": {},
+            "timeouts": null,
+            "ttl": [
+              {
+                "attribute_name": "",
+                "enabled": false
+              }
+            ],
+            "write_capacity": 0
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjYwMDAwMDAwMDAwMCwidXBkYXRlIjozNjAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0="
+        }
+      ]
+    },
+    {
+      "module": "module.chatbot",
+      "mode": "managed",
+      "type": "google_dialogflow_agent",
+      "name": "agent",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "api_version": "API_VERSION_V2",
+            "avatar_uri": null,
+            "avatar_uri_backend": "",
+            "classification_threshold": 0,
+            "default_language_code": "en",
+            "description": "",
+            "display_name": "saws-bot",
+            "enable_logging": false,
+            "id": "saws-lambda-legends-503718",
+            "match_mode": "",
+            "project": "saws-lambda-legends-503718",
+            "supported_language_codes": [],
+            "tier": null,
+            "time_zone": "America/New_York",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoyNDAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MjQwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "module.chatbot.google_project_service.dialogflow"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.chatbot",
+      "mode": "managed",
+      "type": "google_project_service",
+      "name": "dialogflow",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "disable_dependent_services": null,
+            "disable_on_destroy": false,
+            "id": "saws-lambda-legends-503718/dialogflow.googleapis.com",
+            "project": "saws-lambda-legends-503718",
+            "service": "dialogflow.googleapis.com",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInJlYWQiOjYwMDAwMDAwMDAwMCwidXBkYXRlIjoxMjAwMDAwMDAwMDAwfX0="
+        }
+      ]
+    },
+    {
+      "module": "module.messaging",
+      "mode": "managed",
+      "type": "google_firestore_database",
+      "name": "database",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "app_engine_integration_mode": "DISABLED",
+            "cmek_config": [],
+            "concurrency_mode": "PESSIMISTIC",
+            "create_time": "",
+            "delete_protection_state": "DELETE_PROTECTION_DISABLED",
+            "deletion_policy": "ABANDON",
+            "earliest_version_time": "2026-07-29T20:20:05.246989Z",
+            "etag": "IMbZoqfo+JUDMNqs0p+L95UD",
+            "id": "projects/saws-lambda-legends-503718/databases/(default)",
+            "key_prefix": "",
+            "location_id": "us-central1",
+            "name": "(default)",
+            "point_in_time_recovery_enablement": "POINT_IN_TIME_RECOVERY_DISABLED",
+            "project": "saws-lambda-legends-503718",
+            "timeouts": null,
+            "type": "FIRESTORE_NATIVE",
+            "uid": "18a911ed-e698-4f57-a773-e7784a68af1f",
+            "update_time": "",
+            "version_retention_period": "3600s"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "module": "module.messaging",
+      "mode": "managed",
+      "type": "google_pubsub_topic",
+      "name": "support_concerns",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "effective_labels": {},
+            "id": "projects/saws-lambda-legends-503718/topics/saws-support-concerns",
+            "ingestion_data_source_settings": [],
+            "kms_key_name": "",
+            "labels": {},
+            "message_retention_duration": "",
+            "message_storage_policy": [],
+            "name": "saws-support-concerns",
+            "project": "saws-lambda-legends-503718",
+            "schema_settings": [],
+            "terraform_labels": {},
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "module": "module.notifications",
+      "mode": "managed",
+      "type": "aws_sns_topic",
+      "name": "notifications",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "application_failure_feedback_role_arn": "",
+            "application_success_feedback_role_arn": "",
+            "application_success_feedback_sample_rate": 0,
+            "archive_policy": "",
+            "arn": "arn:aws:sns:us-east-1:857527815114:saws-notifications",
+            "beginning_archive_time": "",
+            "content_based_deduplication": false,
+            "delivery_policy": "",
+            "display_name": "",
+            "fifo_throughput_scope": "",
+            "fifo_topic": false,
+            "firehose_failure_feedback_role_arn": "",
+            "firehose_success_feedback_role_arn": "",
+            "firehose_success_feedback_sample_rate": 0,
+            "http_failure_feedback_role_arn": "",
+            "http_success_feedback_role_arn": "",
+            "http_success_feedback_sample_rate": 0,
+            "id": "arn:aws:sns:us-east-1:857527815114:saws-notifications",
+            "kms_master_key_id": "",
+            "lambda_failure_feedback_role_arn": "",
+            "lambda_success_feedback_role_arn": "",
+            "lambda_success_feedback_sample_rate": 0,
+            "name": "saws-notifications",
+            "name_prefix": "",
+            "owner": "857527815114",
+            "policy": "{\"Id\":\"__default_policy_ID\",\"Statement\":[{\"Action\":[\"SNS:GetTopicAttributes\",\"SNS:SetTopicAttributes\",\"SNS:AddPermission\",\"SNS:RemovePermission\",\"SNS:DeleteTopic\",\"SNS:Subscribe\",\"SNS:ListSubscriptionsByTopic\",\"SNS:Publish\"],\"Condition\":{\"StringEquals\":{\"AWS:SourceOwner\":\"857527815114\"}},\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Resource\":\"arn:aws:sns:us-east-1:857527815114:saws-notifications\",\"Sid\":\"__default_statement_ID\"}],\"Version\":\"2008-10-17\"}",
+            "signature_version": 0,
+            "sqs_failure_feedback_role_arn": "",
+            "sqs_success_feedback_role_arn": "",
+            "sqs_success_feedback_sample_rate": 0,
+            "tags": {},
+            "tags_all": {},
+            "tracing_config": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "module": "module.notifications",
+      "mode": "managed",
+      "type": "aws_sns_topic_subscription",
+      "name": "appointment_subscription",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:sns:us-east-1:857527815114:saws-notifications:1288d525-d710-4cc8-b94b-ca3e01c65939",
+            "confirmation_timeout_in_minutes": 1,
+            "confirmation_was_authenticated": true,
+            "delivery_policy": "",
+            "endpoint": "arn:aws:sqs:us-east-1:857527815114:saws-appointment-requests",
+            "endpoint_auto_confirms": false,
+            "filter_policy": "",
+            "filter_policy_scope": "",
+            "id": "arn:aws:sns:us-east-1:857527815114:saws-notifications:1288d525-d710-4cc8-b94b-ca3e01c65939",
+            "owner_id": "857527815114",
+            "pending_confirmation": false,
+            "protocol": "sqs",
+            "raw_message_delivery": false,
+            "redrive_policy": "",
+            "replay_policy": "",
+            "subscription_role_arn": "",
+            "topic_arn": "arn:aws:sns:us-east-1:857527815114:saws-notifications"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "module.notifications.aws_sns_topic.notifications",
+            "module.notifications.aws_sqs_queue.appointment_requests"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.notifications",
+      "mode": "managed",
+      "type": "aws_sqs_queue",
+      "name": "appointment_requests",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:sqs:us-east-1:857527815114:saws-appointment-requests",
+            "content_based_deduplication": false,
+            "deduplication_scope": "",
+            "delay_seconds": 0,
+            "fifo_queue": false,
+            "fifo_throughput_limit": "",
+            "id": "https://sqs.us-east-1.amazonaws.com/857527815114/saws-appointment-requests",
+            "kms_data_key_reuse_period_seconds": 300,
+            "kms_master_key_id": "",
+            "max_message_size": 262144,
+            "message_retention_seconds": 345600,
+            "name": "saws-appointment-requests",
+            "name_prefix": "",
+            "policy": "",
+            "receive_wait_time_seconds": 0,
+            "redrive_allow_policy": "",
+            "redrive_policy": "",
+            "sqs_managed_sse_enabled": true,
+            "tags": {},
+            "tags_all": {},
+            "timeouts": null,
+            "url": "https://sqs.us-east-1.amazonaws.com/857527815114/saws-appointment-requests",
+            "visibility_timeout_seconds": 30
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAsImRlbGV0ZSI6MTgwMDAwMDAwMDAwLCJ1cGRhdGUiOjE4MDAwMDAwMDAwMH19"
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}

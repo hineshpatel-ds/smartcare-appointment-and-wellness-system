@@ -1,0 +1,8 @@
+﻿node_modules/
+dist/
+.git/
+.codex_tmp/
+.env
+.env.*
+npm-debug.log*
+.DS_Store
