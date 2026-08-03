@@ -1,0 +1,202 @@
+openapi: 3.0.3
+info:
+  title: SAWS Appointment & Service Management API
+  description: Backend APIs for healthcare services, doctors, and appointment management.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+
+paths:
+  /services:
+    get:
+      summary: List all healthcare services
+      tags: [Services]
+      responses:
+        '200':
+          description: Array of services
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Service'
+    post:
+      summary: Create a new service (Admin)
+      tags: [Services]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, price]
+              properties:
+                name:
+                  type: string
+                  example: General Checkup
+                desc:
+                  type: string
+                  example: Routine health examination
+                price:
+                  type: number
+                  example: 100
+                active:
+                  type: boolean
+                  example: true
+      responses:
+        '201':
+          description: Service created
+        '400':
+          description: Missing required fields
+
+  /services/{id}:
+    put:
+      summary: Update a service (Admin)
+      tags: [Services]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                active:
+                  type: boolean
+      responses:
+        '200':
+          description: Service updated
+
+  /doctors:
+    get:
+      summary: List all doctors
+      tags: [Doctors]
+      responses:
+        '200':
+          description: Array of doctors
+    post:
+      summary: Register a new doctor (Admin)
+      tags: [Doctors]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, specialty]
+              properties:
+                name:
+                  type: string
+                  example: Dr. Alice Smith
+                specialty:
+                  type: string
+                  example: General
+                active:
+                  type: boolean
+                  example: true
+      responses:
+        '201':
+          description: Doctor created
+        '400':
+          description: Missing required fields
+
+  /appointments:
+    get:
+      summary: List appointments
+      tags: [Appointments]
+      parameters:
+        - name: usr_id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by patient ID. Omit for admin view (all).
+      responses:
+        '200':
+          description: Array of appointments
+    post:
+      summary: Book a new appointment (Patient)
+      tags: [Appointments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [usr_id, doc_id, srv_id, date, time]
+              properties:
+                usr_id:
+                  type: string
+                  example: u001
+                doc_id:
+                  type: string
+                  example: d001
+                srv_id:
+                  type: string
+                  example: s001
+                date:
+                  type: string
+                  example: "2026-10-15"
+                time:
+                  type: string
+                  example: "10:00"
+      responses:
+        '201':
+          description: Appointment booked with status PENDING
+        '400':
+          description: Missing required fields
+
+  /appointments/{id}:
+    put:
+      summary: Update appointment status (Approve/Reject/Cancel)
+      tags: [Appointments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sts]
+              properties:
+                sts:
+                  type: string
+                  enum: [PENDING, APPROVED, REJECTED, CANCELLED]
+                  example: APPROVED
+      responses:
+        '200':
+          description: Status updated
+        '400':
+          description: Invalid status value
+
+components:
+  schemas:
+    Service:
+      type: object
+      properties:
+        srv_id:
+          type: string
+        name:
+          type: string
+        desc:
+          type: string
+        price:
+          type: number
+        active:
+          type: boolean
