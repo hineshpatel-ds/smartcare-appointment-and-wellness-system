@@ -1,62 +1,44 @@
-openapi: 3.0.3
+﻿openapi: 3.0.3
 info:
-  title: SAWS Appointment & Service Management API
-  description: Backend APIs for healthcare services, doctors, and appointment management.
+  title: SmartCare Appointment and Wellness System API
   version: 1.0.0
-
+  description: REST API for SAWS authentication, services, appointments, support messaging, chatbot, feedback, and analytics.
 servers:
-  - url: http://localhost:5000
-    description: Local development server
-
+  - url: https://saws-api-474600405419.us-central1.run.app
+    description: Deployed Cloud Run API
+  - url: http://localhost:8080
+    description: Local API
 paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: API status
   /services:
     get:
-      summary: List all healthcare services
-      tags: [Services]
+      summary: List public healthcare and wellness services
       responses:
-        '200':
-          description: Array of services
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Service'
+        "200":
+          description: Service list
     post:
-      summary: Create a new service (Admin)
-      tags: [Services]
+      summary: Add or update a service offering
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [name, price]
-              properties:
-                name:
-                  type: string
-                  example: General Checkup
-                desc:
-                  type: string
-                  example: Routine health examination
-                price:
-                  type: number
-                  example: 100
-                active:
-                  type: boolean
-                  example: true
+              $ref: "#/components/schemas/ServiceWrite"
       responses:
-        '201':
-          description: Service created
-        '400':
-          description: Missing required fields
-
-  /services/{id}:
+        "200":
+          description: Saved service
+        "403":
+          description: Coordinator access required
+  /services/{serviceId}:
     put:
-      summary: Update a service (Admin)
-      tags: [Services]
+      summary: Update a service offering by ID
       parameters:
-        - name: id
+        - name: serviceId
           in: path
           required: true
           schema:
@@ -66,103 +48,134 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                price:
-                  type: number
-                active:
-                  type: boolean
+              $ref: "#/components/schemas/ServiceWrite"
       responses:
-        '200':
-          description: Service updated
-
-  /doctors:
-    get:
-      summary: List all doctors
-      tags: [Doctors]
-      responses:
-        '200':
-          description: Array of doctors
+        "200":
+          description: Saved service
+        "403":
+          description: Coordinator access required
+  /auth/register:
     post:
-      summary: Register a new doctor (Admin)
-      tags: [Doctors]
+      summary: Register a patient or coordinator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "200":
+          description: Registration started
+  /auth/register/confirm:
+    post:
+      summary: Confirm registration code
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [name, specialty]
+              required: [userId, confirmationCode]
               properties:
-                name:
+                userId:
                   type: string
-                  example: Dr. Alice Smith
-                specialty:
+                confirmationCode:
                   type: string
-                  example: General
-                active:
-                  type: boolean
-                  example: true
       responses:
-        '201':
-          description: Doctor created
-        '400':
-          description: Missing required fields
-
+        "200":
+          description: Confirmed
+  /auth/login/start:
+    post:
+      summary: Login stage 1, user ID and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, password]
+              properties:
+                userId:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Security question challenge
+  /auth/login/security-question:
+    post:
+      summary: Login stage 2, security answer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, answer]
+              properties:
+                userId:
+                  type: string
+                answer:
+                  type: string
+      responses:
+        "200":
+          description: Caesar cipher challenge
+  /auth/login/cipher:
+    post:
+      summary: Login stage 3, healthcare code cipher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, healthcareCode]
+              properties:
+                userId:
+                  type: string
+                healthcareCode:
+                  type: string
+      responses:
+        "200":
+          description: Authenticated user context
   /appointments:
-    get:
-      summary: List appointments
-      tags: [Appointments]
-      parameters:
-        - name: usr_id
-          in: query
-          required: false
-          schema:
-            type: string
-          description: Filter by patient ID. Omit for admin view (all).
-      responses:
-        '200':
-          description: Array of appointments
     post:
-      summary: Book a new appointment (Patient)
-      tags: [Appointments]
+      summary: Book an upcoming appointment
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [usr_id, doc_id, srv_id, date, time]
-              properties:
-                usr_id:
-                  type: string
-                  example: u001
-                doc_id:
-                  type: string
-                  example: d001
-                srv_id:
-                  type: string
-                  example: s001
-                date:
-                  type: string
-                  example: "2026-10-15"
-                time:
-                  type: string
-                  example: "10:00"
+              $ref: "#/components/schemas/AppointmentCreate"
       responses:
-        '201':
-          description: Appointment booked with status PENDING
-        '400':
-          description: Missing required fields
-
-  /appointments/{id}:
-    put:
-      summary: Update appointment status (Approve/Reject/Cancel)
-      tags: [Appointments]
+        "200":
+          description: Appointment created
+        "400":
+          description: Required field missing or appointment is not upcoming
+    get:
+      summary: List role-scoped appointments
       parameters:
-        - name: id
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: role
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [patient, coordinator]
+      responses:
+        "200":
+          description: Appointment list
+        "401":
+          description: Authentication required
+  /appointments/{appointmentId}:
+    patch:
+      summary: Coordinator updates appointment status
+      parameters:
+        - name: appointmentId
           in: path
           required: true
           schema:
@@ -173,30 +186,229 @@ paths:
           application/json:
             schema:
               type: object
-              required: [sts]
+              required: [status, userId, role]
               properties:
-                sts:
+                status:
                   type: string
-                  enum: [PENDING, APPROVED, REJECTED, CANCELLED]
-                  example: APPROVED
+                  enum: [CONFIRMED, REJECTED, CANCELLED]
+                userId:
+                  type: string
+                role:
+                  type: string
+                  enum: [coordinator]
       responses:
-        '200':
-          description: Status updated
-        '400':
-          description: Invalid status value
-
+        "200":
+          description: Updated appointment
+        "403":
+          description: Coordinator access required
+  /messages/support:
+    post:
+      summary: Submit a support concern
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupportCreate"
+      responses:
+        "200":
+          description: Support message created
+  /messages:
+    get:
+      summary: List role-scoped support messages
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: role
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [patient, coordinator]
+      responses:
+        "200":
+          description: Message list
+        "401":
+          description: Authentication required
+  /messages/{messageId}/reply:
+    post:
+      summary: Coordinator replies to support message
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [body, userId, role]
+              properties:
+                body:
+                  type: string
+                status:
+                  type: string
+                userId:
+                  type: string
+                role:
+                  type: string
+                  enum: [coordinator]
+      responses:
+        "200":
+          description: Reply saved
+        "403":
+          description: Coordinator access required
+  /feedback:
+    post:
+      summary: Submit structured feedback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FeedbackCreate"
+      responses:
+        "200":
+          description: Feedback saved
+  /analyze:
+    post:
+      summary: Analyze text sentiment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+      responses:
+        "200":
+          description: Sentiment score
+  /analytics/summary:
+    get:
+      summary: Get role-scoped analytics
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: role
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [patient, coordinator]
+      responses:
+        "200":
+          description: Analytics summary
+        "401":
+          description: Authentication required
+  /chatbot:
+    post:
+      summary: Ask the virtual assistant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message:
+                  type: string
+                userId:
+                  type: string
+      responses:
+        "200":
+          description: Assistant reply
 components:
   schemas:
-    Service:
+    RegisterRequest:
       type: object
+      required: [userId, email, password, role, securityQuestion, securityAnswer, healthcareCode]
       properties:
-        srv_id:
+        userId:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum: [patient, coordinator]
+        securityQuestion:
+          type: string
+        securityAnswer:
+          type: string
+        healthcareCode:
+          type: string
+    ServiceWrite:
+      type: object
+      required: [name, userId, role]
+      properties:
+        serviceId:
           type: string
         name:
           type: string
-        desc:
+        category:
+          type: string
+        specialist:
           type: string
         price:
           type: number
-        active:
-          type: boolean
+        durationMinutes:
+          type: number
+        availability:
+          type: string
+        description:
+          type: string
+        userId:
+          type: string
+        role:
+          type: string
+          enum: [coordinator]
+    AppointmentCreate:
+      type: object
+      required: [userId, date, time, service]
+      properties:
+        userId:
+          type: string
+        service:
+          type: string
+        date:
+          type: string
+          format: date
+        time:
+          type: string
+        notes:
+          type: string
+    SupportCreate:
+      type: object
+      required: [message]
+      properties:
+        userId:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+    FeedbackCreate:
+      type: object
+      required: [userId, service, rating, comment]
+      properties:
+        userId:
+          type: string
+        service:
+          type: string
+        rating:
+          type: number
+        comment:
+          type: string
