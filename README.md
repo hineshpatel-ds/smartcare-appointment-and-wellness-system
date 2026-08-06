@@ -1,141 +1,232 @@
-# SmartCare Appointment and Wellness System (SAWS)
+﻿# SmartCare Appointment and Wellness System (SAWS)
 
-## Analytics & AI Module (Sprint 2)
+SAWS is a hybrid AWS/GCP serverless healthcare and wellness platform. It supports guest service discovery, secure patient/coordinator login, appointment booking, support messaging, chatbot assistance, notifications, feedback sentiment analysis, analytics, and cross-cloud database mirroring.
 
-Coordinator dashboard, feedback form, and sentiment analysis. Backend is a
-mock API with sample data and a Comprehend-shaped sentiment stub
-(`backend/services/sentiment.js`) that can be swapped for the real AWS
-Comprehend SDK call later.
+## Live deployment
 
-## Chatbot Module (Sprint 2)
+Latest deployed Cloud Run services from the implementation:
 
-AWS Lex virtual assistant integrated via Express backend. Handles appointment
-lookups, concern submission, and FAQ intents.
+- Frontend: `https://saws-ui-474600405419.us-central1.run.app`
+- Backend API: `https://saws-api-474600405419.us-central1.run.app`
 
-### Chatbot Intents
-- `SubmitConcernIntent` — concern submission flow
-- `FAQIntent` — booking/cancellation help
-- `AppointmentLookupIntent` — lookup by reference code
+If Cloud Run services are recreated, use Terraform outputs or `gcloud run services describe` to get the latest URLs.
 
-### Architecture Flow
-1. User sends a message through the chatbot interface.
-2. AWS Lex identifies the matching intent.
-3. Lex invokes AWS Lambda for fulfillment.
-4. Lambda reads from / writes to DynamoDB.
-5. Lex sends the final response back to the user.
+## User types
 
-## Running locally
+### Guests
 
-```bash
-# terminal 1 — unified backend (analytics + chatbot)
-cd backend && npm install && npm start   # http://localhost:4000
+- View available healthcare and wellness services.
+- Review doctors/specialists, consultation timings, service charges, and wellness packages.
+- Use the virtual assistant for navigation and service/package guidance.
+- View public service information without logging in.
 
-# terminal 2 — frontend
-cd frontend && npm install && npm run dev  # http://localhost:5173
+### Registered Patients
+
+- Complete sequential multi-stage authentication:
+  1. User ID and password.
+  2. Security question and answer.
+  3. Healthcare code clue using Caesar cipher.
+- Book only upcoming appointments.
+- View personal appointment history and appointment status.
+- Submit support concerns.
+- Use the chatbot for navigation, appointment lookup, and support requests.
+- Submit structured feedback with sentiment analysis.
+- View only their own analytics and activity.
+
+### Wellness Coordinators
+
+- Complete the same sequential authentication flow.
+- Add or update healthcare and wellness services.
+- Manage doctors/specialists schedules through service availability data.
+- Approve or reject appointment requests.
+- Manage service pricing and package information.
+- Review support concerns and communicate asynchronously with patients.
+- Monitor platform-level analytics and engagement.
+
+## Implemented cloud services
+
+| Area | Services |
+|---|---|
+| Frontend | React + Vite on Google Cloud Run |
+| Backend/API | Node.js + Express on Google Cloud Run |
+| Authentication | AWS Cognito, DynamoDB, backend auth orchestration |
+| Database | DynamoDB primary operational tables, Firestore mirrored collections |
+| Chatbot | React chatbot widget, Cloud Run chatbot endpoint, Dialogflow-ready fulfillment design |
+| Messaging | Google Pub/Sub, DynamoDB support messages, Firestore mirror |
+| Notifications | AWS SNS, AWS SQS, Lambda processors |
+| Analytics | Cloud Run API aggregation, Google Natural Language API, Looker Studio-ready mirrored data |
+| Infrastructure | Terraform AWS and Google providers |
+
+## Project structure
+
+```text
+frontend/                  React/Vite frontend application
+backend/                   Express API, Lambda handlers, mirroring functions
+terraform/                 Infrastructure as Code
+  auth/                    Cognito and authentication DynamoDB resources
+  frontend/                Frontend Cloud Run service
+  messaging/               Pub/Sub, Firestore, messaging resources
+  notifications/           SNS, SQS, notification Lambda resources
+  chatbot/                 Chatbot cloud resources
+  appointment/             Appointment tables/functions
+  analytics/               Backend Cloud Run service and analytics env
+
+docs/
+  api/                     API contract and OpenAPI documentation
+  research/                Module research and service selection writeups
+  architecture/            Mermaid source files for architecture diagrams
 ```
 
+## API overview
 
+The backend API includes:
 
-## Current Working Features
-The following chatbot functions are currently working in the Sprint 2 prototype:
-- Navigation support for appointment-related guidance.
-- Appointment lookup using an appointment reference code.
-- Concern submission flow that prompts the user and confirms submission.
-- Basic FAQ support for registration and platform help.
+- `GET /health`
+- `GET /services`
+- `POST /auth/register`
+- `POST /auth/register/confirm`
+- `POST /auth/login/start`
+- `POST /auth/login/security-question`
+- `POST /auth/login/cipher`
+- `POST /appointments`
+- `GET /appointments?userId={id}&role={role}`
+- `PATCH /appointments/{appointmentId}`
+- `POST /messages/support`
+- `GET /messages?userId={id}&role={role}`
+- `POST /messages/{messageId}/reply`
+- `POST /chatbot`
+- `POST /feedback`
+- `POST /analyze`
+- `GET /analytics/summary?userId={id}&role={role}`
 
-## Chatbot Intents
-Current intents implemented in the bot:
-- `SubmitConcernIntent`
-- `FAQIntent`
-- `AppointmentLookupIntent`
+See `docs/api/api.md`, `docs/api/api-contract.md`, and `docs/api/swagger.yaml` for details.
 
-Planned / future intents:
-- `NavigationIntent`
-- `WellnessPackageInquiryIntent`.
+## Security and authorization behavior
 
-## Intent Details
-### SubmitConcernIntent
-Sample utterances currently used:
-- `I want to submit a concern`
-- `I have a complaint`
-- `I need support`
-- `I want to report an issue`
+- Guest users can access public service information and chatbot assistance.
+- Analytics, appointment history, and message history require login context.
+- Patients receive patient-scoped data only.
+- Coordinator-only mutations return `403` unless the request includes coordinator context.
+- Past appointment booking is rejected by both frontend validation and backend validation.
+- Cloud provider/API implementation details are not shown in the UI.
 
-This intent maps directly to the requirements for the project that the chatbot should accept patient concerns or support requests and forward them through the system. 
+## Database mirroring
 
-### FAQIntent
+SAWS mirrors records between DynamoDB and Firestore to demonstrate cross-cloud availability and reliability:
 
-Sample utterances currently used:
-- `How do I {faqTopic}` ---> eg. `How do I cancel`, `How do I book`
-- `Help me with {faqTopic}`
-- `I need help with {faqTopic}`
-- `How do I book an appointment`
-- `How do I cancel an appointment`
+- Backend writes operational records to DynamoDB.
+- Backend mirrors users, appointments, services, feedback, and support messages to Firestore.
+- Mirroring functions include `_source` markers to avoid write loops.
+- Firestore provides a Google-native mirrored copy for future reporting and recovery scenarios.
 
-This intent supports the required FAQ function of the virtual assistant. 
+## Local development
 
-## Slot Type
-### faqTopicType
-Custom slot values currently used (faqTopic):
-- `booking`
-- `book`
-- `book appointment`
-- `make appointment`
-- `cancel`
-- `canceling`
-- `cancel appointment`
+### Backend
 
-### AppointmentLookupIntent
-These values support FAQ utterances related to booking and cancellation help, which are part of the user support expectations described in the project document.
+```bash
+cd backend
+npm install
+npm start
+```
 
-## Architecture Flow
-1. A user sends a message through the Lex console or chatbot interface.
-2. AWS Lex identifies the matching intent.
-3. Lex collects slot values when needed.
-4. Lex invokes AWS Lambda for fulfillment.
-5. Lambda processes the request and reads from or writes to DynamoDB where applicable.
-6. Lambda returns the response to Lex.
-7. Lex sends the final chatbot response back to the user.
+Default backend URL:
 
-## Sample Working Tests
-These are the tests that currently work and can be demonstrated now:
+```text
+http://localhost:8080
+```
 
-| Intent | Input | Expected Result |
-|--------|-------|----------------|
-| SubmitConcernIntent | `I want to submit a concern` | Prompts the user for concern details and confirms submission. |
-| SubmitConcernIntent | `I have a complaint` | Routes the user into the concern submission flow. |
-| SubmitConcernIntent | `I need support` | Routes the user into the concern or support flow. |
-| SubmitConcernIntent | `I want to report an issue` | Prompts the user to submit issue details. |
-| FAQIntent | `How do I book an appointment` | Returns booking help information. |
-| FAQIntent | `How do I cancel an appointment` | Returns cancellation help information. |
-| AppointmentLookupIntent | `Check appointment with code APT1001` | Returns appointment details for the provided appointment reference code. |
+### Frontend
 
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## Suggested Extra Tests
-The project also expects broader chatbot testing, Lambda event testing, and documentation evidence. Good next tests to add are:
-- `Help me with booking`
-- `I need help with cancel appointment`
-- `Show appointment details for APT1002`
-- `Check appointment with code APT4040`
-- `What wellness packages are available`. (Future)
+Default frontend URL:
 
-## Current Status
-Implemented now:
-- Lex bot setup.
-- Working intents for concern submission, FAQ, and appointment lookup.
-- Lambda fulfillment for the currently working chatbot flows.
-- Initial chatbot testing using sample utterances.
+```text
+http://localhost:5173
+```
 
-`.env file`
-PORT=5000
-AWS_REGION=us-east-1
-LEX_BOT_ID=0JCWF5YS9M
-LEX_BOT_ALIAS_ID=TSTALIASID
-LEX_LOCALE_ID=en_US
-AWS_ACCESS_KEY_ID=REDACTED-AWS-SECRET-0
-AWS_SECRET_ACCESS_KEY=REDACTED-AWS-SECRET-1``
+For local API wiring, configure `frontend/public/env.js` or Vite environment settings so the frontend points to the local or deployed backend.
 
-## Conclusion
+## Validation commands
 
-The application when heading to Chatbot, while running the backend server, the application should work and start sending and recieving requests from Lex which is interacting with DynamoDB by using the Lambda function.
->>>>>>> origin/chatbot-sprint2
+```bash
+cd backend
+node --check server.js
+node --check service.js
+npm test
+```
+
+```bash
+cd frontend
+npm run lint
+npm run build
+```
+
+## Terraform deployment
+
+Terraform modules are composed from `terraform/main.tf`.
+
+Typical flow:
+
+```bash
+cd terraform
+terraform init
+terraform plan
+terraform apply
+```
+
+Required variables include:
+
+- `gcp_project_id`
+- `gcp_region`
+- `aws_region`
+- `aws_access_key_id`
+- `aws_secret_access_key`
+- `aws_session_token` when using temporary AWS lab credentials
+- `frontend_image` and `backend_image` if using prebuilt container images
+
+Do not commit real cloud credentials. Use environment variables, CI/CD variables, or local `.tfvars` files excluded from Git.
+
+## Documentation index
+
+API docs:
+
+- `docs/api/api.md`
+- `docs/api/api-contract.md`
+- `docs/api/swagger.yaml`
+
+Research docs:
+
+- `docs/research/analytics.md`
+- `docs/research/architecture.md`
+- `docs/research/authentication.md`
+- `docs/research/chatbot.md`
+- `docs/research/messaging.md`
+- `docs/research/notifications.md`
+- `docs/research/frontend-backend-deployment.md`
+
+Architecture Mermaid sources:
+
+- `docs/architecture/final-full-architecture.mmd`
+- `docs/architecture/full-data-flow-diagram.mmd`
+- `docs/architecture/hybrid-aws-gcp-architecture.mmd`
+- `docs/architecture/database-mirroring-flow.mmd`
+
+Paste the Mermaid code into https://mermaid.live or Mermaid-compatible Markdown tooling to export PNG/SVG diagrams.
+
+## References
+
+- Google Cloud Run: https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run
+- Amazon Cognito: https://docs.aws.amazon.com/cognito/
+- Amazon DynamoDB: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html
+- Google Cloud Pub/Sub: https://cloud.google.com/pubsub/docs
+- Firestore: https://cloud.google.com/products/firestore
+- Amazon SNS: https://docs.aws.amazon.com/sns/
+- Amazon SQS: https://docs.aws.amazon.com/sqs/
+- Google Natural Language API: https://docs.cloud.google.com/natural-language/docs/basics
+- Terraform AWS provider: https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+- Terraform Google provider: https://registry.terraform.io/providers/hashicorp/google/latest/docs
