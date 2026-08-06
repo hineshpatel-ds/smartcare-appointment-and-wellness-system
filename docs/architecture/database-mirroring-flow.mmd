@@ -1,0 +1,20 @@
+﻿flowchart LR
+  API[Cloud Run API]
+  DDB[(DynamoDB Tables)]
+  FS[(Firestore Collections)]
+  F2D[Firestore-to-DynamoDB Sync Function]
+  D2F[DynamoDB-to-Firestore Sync Function]
+  Guard{_source marker}
+
+  API -->|primary write| DDB
+  API -->|mirror write with _source=dynamodb| FS
+  FS -->|document event| F2D
+  F2D --> Guard
+  Guard -->|not from DynamoDB| DDB
+  Guard -->|from DynamoDB| Skip1[Skip loop]
+
+  DDB -->|stream/event target| D2F
+  D2F -->|mirror write with _source=firestore| FS
+
+  classDef store fill:#f8fbff,stroke:#356ac3,color:#111;
+  class DDB,FS store;

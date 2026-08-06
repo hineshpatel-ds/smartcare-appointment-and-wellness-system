@@ -1,0 +1,51 @@
+﻿sequenceDiagram
+  autonumber
+  actor User as Guest/Patient/Coordinator
+  participant UI as React Frontend
+  participant API as Cloud Run API
+  participant Cognito as AWS Cognito
+  participant Dynamo as DynamoDB
+  participant Firestore as Firestore Mirror
+  participant PubSub as GCP Pub/Sub
+  participant SNS as AWS SNS
+  participant SQS as AWS SQS
+  participant NLP as Natural Language API
+
+  User->>UI: Open SAWS
+  UI->>API: GET /services
+  API->>Dynamo: Scan services table
+  API-->>UI: Public services and pricing
+
+  User->>UI: Register or login
+  UI->>API: Auth requests
+  API->>Cognito: Password registration/login
+  API->>Dynamo: Store/read security question and cipher metadata
+  API->>SNS: Registration/login event
+  API-->>UI: User role and app token
+
+  User->>UI: Book future appointment
+  UI->>API: POST /appointments
+  API->>API: Validate upcoming date/time
+  API->>Dynamo: Write appointment
+  API->>Firestore: Mirror appointment
+  API->>SQS: Queue appointment notification
+  API-->>UI: Appointment reference
+
+  User->>UI: Submit support concern
+  UI->>API: POST /messages/support
+  API->>PubSub: Publish concern event
+  API->>Dynamo: Write support message
+  API->>Firestore: Mirror support message
+  API-->>UI: Message reference
+
+  User->>UI: Submit feedback
+  UI->>API: POST /feedback
+  API->>NLP: Analyze sentiment
+  API->>Dynamo: Store feedback
+  API->>Firestore: Mirror feedback
+  API-->>UI: Sentiment result
+
+  User->>UI: View dashboard or analytics
+  UI->>API: GET protected resources with userId and role
+  API->>Dynamo: Read scoped records
+  API-->>UI: Patient-scoped or coordinator-scoped data

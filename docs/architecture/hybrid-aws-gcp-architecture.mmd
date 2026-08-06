@@ -1,0 +1,41 @@
+﻿flowchart TB
+  subgraph Users[User Types]
+    G[Guests]
+    P[Registered Patients]
+    C[Wellness Coordinators]
+  end
+
+  subgraph GCP[GCP Responsibilities]
+    CloudRunUI[Frontend on Cloud Run]
+    CloudRunAPI[Backend/API on Cloud Run]
+    Firestore[(Firestore mirror)]
+    PubSub[Pub/Sub support events]
+    Dialogflow[Dialogflow assistant target]
+    NL[Natural Language sentiment]
+  end
+
+  subgraph AWS[AWS Responsibilities]
+    Cognito[Cognito authentication]
+    Dynamo[(DynamoDB operational tables)]
+    SNS[SNS notifications]
+    SQS[SQS notification queue]
+    Lambda[Lambda processors]
+  end
+
+  G --> CloudRunUI
+  P --> CloudRunUI
+  C --> CloudRunUI
+  CloudRunUI --> CloudRunAPI
+
+  CloudRunAPI --> Cognito
+  CloudRunAPI --> Dynamo
+  CloudRunAPI --> Firestore
+  CloudRunAPI --> PubSub
+  CloudRunAPI --> NL
+  CloudRunAPI --> SNS
+  CloudRunAPI --> SQS
+  SQS --> Lambda
+  Lambda --> SNS
+  Dialogflow -. webhook fulfillment .-> CloudRunAPI
+
+  Dynamo <-->|mirrored records| Firestore
