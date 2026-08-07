@@ -1,7 +1,6 @@
 stages:
   - lint
   - build
-  - test
   - deploy
 
 variables:
@@ -10,7 +9,7 @@ variables:
 
 lint_frontend:
   stage: lint
-  image: node:18
+  image: node:20
   script:
     - cd ${FRONTEND_ROOT}
     - npm install
@@ -18,7 +17,7 @@ lint_frontend:
 
 build_frontend:
   stage: build
-  image: node:18
+  image: node:20
   script:
     - cd ${FRONTEND_ROOT}
     - npm install
