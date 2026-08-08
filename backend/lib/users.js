@@ -41,7 +41,6 @@ async function createUserRecord(input, { status, allowCognito = true }) {
     status,
     securityQuestion: input.securityQuestion,
     securityAnswer: normalizeAnswer(input.securityAnswer),
-    healthcareCodeHint: `Apply Caesar shift ${shift} to your healthcare code clue.`,
     healthcareCodeEncrypted: caesarCipher(input.healthcareCode, shift),
     cipherShift: shift,
     passwordHash: hashPassword(input.password),
@@ -128,7 +127,6 @@ async function registerUser(input) {
     role: user.role,
     status: user.status,
     securityQuestion: user.securityQuestion,
-    healthcareCodeHint: user.healthcareCodeHint,
     confirmationRequired: Boolean(config.userPoolClientId)
   };
 }
@@ -185,10 +183,7 @@ async function verifySecurityQuestion({ userId, answer }) {
   const user = await getItem(config.usersTable, { userId }, memory.users);
   if (!user || user.securityAnswer !== normalizeAnswer(answer)) throw new Error('Invalid security answer');
   return {
-    nextStage: 'caesar-cipher',
-    healthcareCodeHint: user.healthcareCodeHint,
-    encryptedCode: user.healthcareCodeEncrypted,
-    cipherShift: user.cipherShift
+    nextStage: 'caesar-cipher'
   };
 }
 
@@ -236,22 +231,38 @@ async function ensureCoordinatorSeed() {
   }
 
   const existing = await getItem(config.usersTable, { userId }, memory.users);
-  if (existing) return existing;
+  const coordinator =
+    existing ||
+    (await createUserRecord(
+      {
+        userId,
+        email,
+        password,
+        role: 'coordinator',
+        securityQuestion,
+        securityAnswer,
+        healthcareCode,
+        displayName: process.env.COORDINATOR_DISPLAY_NAME || 'Wellness Coordinator'
+      },
+      { status: 'ACTIVE' }
+    ));
 
-  const coordinator = await createUserRecord(
-    {
-      userId,
-      email,
-      password,
-      role: 'coordinator',
-      securityQuestion,
-      securityAnswer,
-      healthcareCode,
-      displayName: process.env.COORDINATOR_DISPLAY_NAME || 'Wellness Coordinator'
-    },
-    { status: 'ACTIVE' }
-  );
-  console.log(`Seeded wellness coordinator account: ${coordinator.userId}`);
+  // The seeded coordinator never goes through the email-confirmation-code
+  // flow a self-registered user would, so their Cognito user is left in an
+  // unconfirmed state (login fails with "User is not confirmed") unless we
+  // confirm it administratively here. Safe to call every boot: confirming
+  // an already-confirmed user is a harmless no-op error we swallow.
+  if (config.userPoolId) {
+    try {
+      await cognito.adminConfirmSignUp({ UserPoolId: config.userPoolId, Username: userId }).promise();
+    } catch (error) {
+      if (error.code !== 'NotAuthorizedException') {
+        console.warn(`Coordinator admin-confirm skipped: ${error.message}`);
+      }
+    }
+  }
+
+  if (!existing) console.log(`Seeded wellness coordinator account: ${coordinator.userId}`);
   return coordinator;
 }
 

@@ -267,18 +267,13 @@ export function AuthPage() {
             </Field>
           )}
           {stage === 'cipher' && (
-            <>
-              <p className="challenge">
-                Encrypted clue: <strong>{challenge?.encryptedCode}</strong>. Shift: {challenge?.cipherShift}
-              </p>
-              <Field label="Original healthcare code">
-                <input
-                  value={loginForm.healthcareCode}
-                  onChange={(e) => setLoginForm({ ...loginForm, healthcareCode: e.target.value })}
-                  required
-                />
-              </Field>
-            </>
+            <Field label="Healthcare code">
+              <input
+                value={loginForm.healthcareCode}
+                onChange={(e) => setLoginForm({ ...loginForm, healthcareCode: e.target.value })}
+                required
+              />
+            </Field>
           )}
           <button className="primary" type="submit">
             <Check size={16} /> Continue
