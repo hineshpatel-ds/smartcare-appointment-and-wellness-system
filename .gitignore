@@ -6,8 +6,11 @@ build/
 .codex_tmp/
 .terraform/
 *.tfstate*
+*.tfvars
+!*.tfvars.example
 terraform/**/*.zip
 terraform/backend.hcl
+**/.build/
 gcp-key.json
 gcp-key*.json
 backend/.data/
