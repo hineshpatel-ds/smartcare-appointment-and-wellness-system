@@ -1,7 +1,8 @@
 module "notifications" {
-  source          = "./notifications"
-  project_name    = var.project_name
-  lambda_role_arn = var.lambda_role_arn
+  source           = "./notifications"
+  project_name     = var.project_name
+  lambda_role_arn  = var.lambda_role_arn
+  ses_sender_email = var.ses_sender_email
 }
 
 module "auth" {
@@ -58,6 +59,14 @@ module "analytics" {
   sqs_queue_url         = module.notifications.sqs_queue_url
   sns_topic_arn         = module.notifications.sns_topic_arn
   pubsub_topic          = module.messaging.pubsub_topic_name
+
+  ses_sender_email              = var.ses_sender_email
+  coordinator_user_id           = var.coordinator_user_id
+  coordinator_email             = var.coordinator_email
+  coordinator_password          = var.coordinator_password
+  coordinator_security_question = var.coordinator_security_question
+  coordinator_security_answer   = var.coordinator_security_answer
+  coordinator_healthcare_code   = var.coordinator_healthcare_code
 }
 
 module "frontend" {

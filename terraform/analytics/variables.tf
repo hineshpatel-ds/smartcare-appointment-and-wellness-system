@@ -25,3 +25,37 @@ variable "cognito_client_id" { type = string }
 variable "sqs_queue_url" { type = string }
 variable "sns_topic_arn" { type = string }
 variable "pubsub_topic" { type = string }
+variable "ses_sender_email" {
+  type    = string
+  default = ""
+}
+variable "coordinator_user_id" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+variable "coordinator_email" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+variable "coordinator_password" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+variable "coordinator_security_question" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+variable "coordinator_security_answer" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+variable "coordinator_healthcare_code" {
+  type      = string
+  default   = ""
+  sensitive = true
+}

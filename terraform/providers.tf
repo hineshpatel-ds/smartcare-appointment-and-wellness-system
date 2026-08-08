@@ -13,6 +13,16 @@ terraform {
       version = "~> 2.4"
     }
   }
+
+  # Remote state so `terraform apply` (locally and in CI) always reads/writes
+  # the same state instead of starting from a blank local state file every
+  # run. Bucket/table names are environment-specific and must be created out
+  # of band (S3 bucket with versioning, DynamoDB table with a "LockID" hash
+  # key), then supplied at `terraform init` time, e.g.:
+  #   terraform init -backend-config=backend.hcl
+  # See backend.hcl.example for the expected keys. Terraform backend blocks
+  # cannot reference variables, which is why these are left blank here.
+  backend "s3" {}
 }
 
 provider "aws" {

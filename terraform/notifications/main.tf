@@ -58,6 +58,67 @@ resource "aws_lambda_event_source_mapping" "appointment_queue" {
   batch_size       = 5
 }
 
+# SES identity for the sender address. AWS still requires the recipient to
+# click the verification email themselves -- Terraform can't complete that
+# step. While the account is in SES sandbox mode, recipient addresses also
+# need to be verified (or the account needs SES production access) before
+# mail actually lands in an inbox.
+resource "aws_ses_email_identity" "sender" {
+  count = var.ses_sender_email != "" ? 1 : 0
+  email = var.ses_sender_email
+}
+
+# Table names are derived by convention instead of taking module outputs
+# from the appointment/auth modules, because the appointment module already
+# depends on this notifications module for its SQS/SNS ARNs -- taking a
+# reference back would create a circular module dependency.
+locals {
+  appointments_table_name = "${var.project_name}-appointments"
+}
+
+resource "aws_lambda_function" "send_reminders" {
+  function_name    = "${var.project_name}-send-reminders"
+  role             = var.lambda_role_arn
+  runtime          = "nodejs20.x"
+  handler          = "notifications-lambdas/send-reminders.handler"
+  filename         = data.archive_file.backend_zip.output_path
+  source_code_hash = data.archive_file.backend_zip.output_base64sha256
+  timeout          = 60
+
+  environment {
+    variables = {
+      PROJECT_NAME            = var.project_name
+      APPOINTMENTS_TABLE      = local.appointments_table_name
+      SES_SENDER_EMAIL        = var.ses_sender_email
+      REMINDER_WINDOW_MINUTES = "30"
+    }
+  }
+}
+
+# Classic EventBridge rule (rather than the newer EventBridge Scheduler)
+# because it invokes the Lambda via a resource-based permission instead of
+# a dedicated execution role -- the project only has a single fixed LabRole
+# available in restricted lab accounts, and that role isn't guaranteed to
+# have a trust policy for scheduler.amazonaws.com.
+resource "aws_cloudwatch_event_rule" "appointment_reminders" {
+  name                = "${var.project_name}-appointment-reminders"
+  description         = "Periodically scans for upcoming confirmed appointments and sends reminder emails."
+  schedule_expression = "rate(15 minutes)"
+}
+
+resource "aws_cloudwatch_event_target" "appointment_reminders" {
+  rule = aws_cloudwatch_event_rule.appointment_reminders.name
+  arn  = aws_lambda_function.send_reminders.arn
+}
+
+resource "aws_lambda_permission" "allow_eventbridge_reminders" {
+  statement_id  = "AllowEventBridgeInvokeReminders"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.send_reminders.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.appointment_reminders.arn
+}
+
 output "sns_topic_arn" {
   value = aws_sns_topic.notifications.arn
 }

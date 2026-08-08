@@ -95,6 +95,34 @@ resource "google_cloud_run_service" "api" {
           name  = "PUBSUB_TOPIC"
           value = var.pubsub_topic
         }
+        env {
+          name  = "SES_SENDER_EMAIL"
+          value = var.ses_sender_email
+        }
+        env {
+          name  = "COORDINATOR_USER_ID"
+          value = var.coordinator_user_id
+        }
+        env {
+          name  = "COORDINATOR_EMAIL"
+          value = var.coordinator_email
+        }
+        env {
+          name  = "COORDINATOR_PASSWORD"
+          value = var.coordinator_password
+        }
+        env {
+          name  = "COORDINATOR_SECURITY_QUESTION"
+          value = var.coordinator_security_question
+        }
+        env {
+          name  = "COORDINATOR_SECURITY_ANSWER"
+          value = var.coordinator_security_answer
+        }
+        env {
+          name  = "COORDINATOR_HEALTHCARE_CODE"
+          value = var.coordinator_healthcare_code
+        }
       }
     }
   }

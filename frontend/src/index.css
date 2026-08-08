@@ -108,6 +108,38 @@ button.active,
   justify-content: flex-end;
 }
 
+.nav-actions a,
+.brand {
+  text-decoration: none;
+}
+
+.nav-actions a {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 8px;
+  min-height: 38px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-actions a:hover {
+  border-color: #9db0c8;
+}
+
+.nav-actions a.primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.nav-actions a.primary:hover {
+  background: var(--primary-strong);
+  border-color: var(--primary-strong);
+}
+
 main {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
@@ -681,4 +713,130 @@ body {
   .analytics-grid .row {
     grid-template-columns: 1fr;
   }
+}
+
+/* Package cards: compact by default, zoom + reveal full detail on hover/focus */
+.package-card {
+  position: relative;
+  cursor: default;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  outline: none;
+}
+
+.package-card .price-line {
+  margin: 4px 0 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.package-card .price-line span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.package-reveal {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+}
+
+.package-card:hover,
+.package-card:focus-within {
+  transform: scale(1.06);
+  box-shadow: 0 20px 40px rgba(22, 34, 51, 0.18);
+  z-index: 5;
+}
+
+.package-card:hover .package-reveal,
+.package-card:focus-within .package-reveal {
+  max-height: 320px;
+  opacity: 1;
+  margin-top: 14px;
+}
+
+/* Doctor directory cards */
+.doctor-card .schedule-list {
+  margin-top: 14px;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  background: var(--soft);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 13px;
+}
+
+.chip-row.selectable .chip {
+  cursor: pointer;
+  min-height: 32px;
+  border: 1px solid var(--line);
+}
+
+.chip-row.selectable .chip.selected {
+  background: #e8f0ff;
+  border-color: #b7ccf8;
+  color: var(--primary-strong);
+  font-weight: 700;
+}
+
+/* Schedule editor */
+.schedule-editor {
+  display: grid;
+  gap: 12px;
+}
+
+.schedule-row {
+  grid-template-columns: 1fr 1fr auto;
+}
+
+.schedule-add {
+  margin-top: 4px;
+}
+
+.schedule-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Support message replies */
+.reply {
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 6px 8px;
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+.reply-form {
+  display: grid;
+  grid-template-columns: 1fr 42px;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.reply-form input {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 10px;
+  min-height: 34px;
+}
+
+.auth-tabs.compact {
+  margin-bottom: 6px;
 }

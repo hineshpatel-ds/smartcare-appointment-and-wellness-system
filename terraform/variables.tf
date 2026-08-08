@@ -55,3 +55,46 @@ variable "backend_image" {
   description = "Container image for the SAWS backend/API Cloud Run service."
   default     = null
 }
+
+variable "ses_sender_email" {
+  type        = string
+  description = "Verified SES sender address used for all outbound SmartCare emails (registration, login, appointment, reminder). Empty disables real email sending."
+  default     = ""
+}
+
+variable "coordinator_user_id" {
+  type        = string
+  description = "userId for the seeded Wellness Coordinator account. Coordinators cannot self-register; this is the only way one exists."
+  default     = ""
+  sensitive   = true
+}
+
+variable "coordinator_email" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+
+variable "coordinator_password" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+
+variable "coordinator_security_question" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+
+variable "coordinator_security_answer" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+
+variable "coordinator_healthcare_code" {
+  type      = string
+  default   = ""
+  sensitive = true
+}

@@ -5,7 +5,10 @@ build/
 .env
 .codex_tmp/
 .terraform/
-*.tfstate
-*.tfstate.backup
+*.tfstate*
+terraform/**/*.zip
+terraform/backend.hcl
 gcp-key.json
 gcp-key*.json
+backend/.data/
+backend/.smoke-test-data/

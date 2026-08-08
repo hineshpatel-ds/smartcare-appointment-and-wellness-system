@@ -6,6 +6,12 @@ const {
   startLogin,
   verifySecurityQuestion,
   verifyCipher,
+  ensureCoordinatorSeed,
+  listUsersByRole,
+  listDoctors,
+  listPendingDoctors,
+  decideDoctorApproval,
+  updateDoctorSchedule,
   listServices,
   upsertService,
   bookAppointment,
@@ -15,6 +21,7 @@ const {
   listMessages,
   replyToMessage,
   submitFeedback,
+  feedbackSummary,
   analyzeSentiment,
   analyticsSummary,
   chatbotReply
@@ -33,9 +40,9 @@ function asyncRoute(handler) {
       const message = error.message || 'Request failed';
       const status = message.includes('Authentication required')
         ? 401
-        : message.includes('Coordinator access required')
+        : message.includes('access required')
           ? 403
-          : ['Invalid', 'required', 'not found', 'upcoming'].some((term) =>
+          : ['Invalid', 'required', 'not found', 'upcoming', 'available', 'already registered'].some((term) =>
               message.toLowerCase().includes(term.toLowerCase())
             )
               ? 400
@@ -59,6 +66,13 @@ app.get('/services', asyncRoute(() => listServices()));
 app.put('/services/:serviceId', asyncRoute((req) => upsertService({ ...req.body, serviceId: req.params.serviceId })));
 app.post('/services', asyncRoute((req) => upsertService(req.body)));
 
+app.get('/doctors', asyncRoute(() => listDoctors()));
+app.get('/doctors/pending', asyncRoute((req) => listPendingDoctors(req.query)));
+app.patch('/doctors/:doctorId/approval', asyncRoute((req) => decideDoctorApproval(req.params.doctorId, req.body)));
+app.put('/doctors/:doctorId/schedule', asyncRoute((req) => updateDoctorSchedule(req.params.doctorId, req.body.schedule, req.body)));
+
+app.get('/users', asyncRoute((req) => listUsersByRole(req.query.targetRole, req.query)));
+
 app.post('/appointments', asyncRoute((req) => bookAppointment(req.body)));
 app.get('/appointments', asyncRoute((req) => listAppointments(req.query)));
 app.patch('/appointments/:appointmentId', asyncRoute((req) => updateAppointment(req.params.appointmentId, req.body)));
@@ -69,10 +83,15 @@ app.post('/messages/:messageId/reply', asyncRoute((req) => replyToMessage(req.pa
 
 app.post('/chatbot', asyncRoute((req) => chatbotReply(req.body)));
 app.post('/feedback', asyncRoute((req) => submitFeedback(req.body)));
+app.get('/feedback/summary', asyncRoute(() => feedbackSummary()));
 app.post('/analyze', asyncRoute((req) => analyzeSentiment(req.body.text)));
 app.get('/analytics/summary', asyncRoute((req) => analyticsSummary(req.query)));
 
 const port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log(`SAWS API listening on port ${port}`);
-});
+ensureCoordinatorSeed()
+  .catch((error) => console.error(`Coordinator seed bootstrap failed: ${error.message}`))
+  .finally(() => {
+    app.listen(port, () => {
+      console.log(`SAWS API listening on port ${port}`);
+    });
+  });
