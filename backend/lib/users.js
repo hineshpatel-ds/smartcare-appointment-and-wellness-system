@@ -183,7 +183,10 @@ async function verifySecurityQuestion({ userId, answer }) {
   const user = await getItem(config.usersTable, { userId }, memory.users);
   if (!user || user.securityAnswer !== normalizeAnswer(answer)) throw new Error('Invalid security answer');
   return {
-    nextStage: 'caesar-cipher'
+    nextStage: 'caesar-cipher',
+    // The encrypted clue is shown so the user can decode it themselves; the
+    // shift itself is never returned so it can't just be read off the wire.
+    encryptedCode: user.healthcareCodeEncrypted
   };
 }
 

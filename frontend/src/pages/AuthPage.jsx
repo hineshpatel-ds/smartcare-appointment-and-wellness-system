@@ -267,13 +267,20 @@ export function AuthPage() {
             </Field>
           )}
           {stage === 'cipher' && (
-            <Field label="Healthcare code">
-              <input
-                value={loginForm.healthcareCode}
-                onChange={(e) => setLoginForm({ ...loginForm, healthcareCode: e.target.value })}
-                required
-              />
-            </Field>
+            <>
+              <p className="challenge">
+                Caesar cipher clue: <strong>{challenge?.encryptedCode}</strong>
+                <br />
+                Decode it with the shift you registered with, then enter your original healthcare code below.
+              </p>
+              <Field label="Healthcare code">
+                <input
+                  value={loginForm.healthcareCode}
+                  onChange={(e) => setLoginForm({ ...loginForm, healthcareCode: e.target.value })}
+                  required
+                />
+              </Field>
+            </>
           )}
           <button className="primary" type="submit">
             <Check size={16} /> Continue
