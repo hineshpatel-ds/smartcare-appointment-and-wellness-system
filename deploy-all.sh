@@ -7,7 +7,7 @@
 # gcloud auth login
 # gcloud auth configure-docker
 
-PROJECT_ID="saws-lambda-legends-503718"
+PROJECT_ID="saws-505203"
 FRONTEND_IMAGE="gcr.io/${PROJECT_ID}/saws-frontend:latest"
 ANALYTICS_IMAGE="gcr.io/${PROJECT_ID}/saws-analytics:latest"
 

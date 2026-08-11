@@ -40,6 +40,7 @@ data "archive_file" "backend_zip" {
   type        = "zip"
   source_dir  = "${path.root}/../backend"
   output_path = "${path.module}/notifications-backend.zip"
+  excludes    = ["node_modules/**", "*.zip"]
 }
 
 # Table names are derived by convention instead of taking module outputs

@@ -65,6 +65,7 @@ data "archive_file" "backend_zip" {
   type        = "zip"
   source_dir  = "${path.root}/../backend"
   output_path = "${path.module}/auth-backend.zip"
+  excludes    = ["node_modules/**", "*.zip"]
 }
 
 resource "aws_lambda_function" "second_stage" {

@@ -5,21 +5,21 @@ $env:GOOGLE_APPLICATION_CREDENTIALS="$PWD\gcp-key.json"
 # $env:AWS_ACCESS_KEY_ID="..."
 # $env:AWS_SECRET_ACCESS_KEY="..."
 # $env:AWS_SESSION_TOKEN="..."
-$env:TF_VAR_gcp_project_id="saws-lambda-legends-503718"
+$env:TF_VAR_gcp_project_id="saws-505203"
 
 Write-Host "Authenticating Docker with GCP..."
 cmd /c 'docker login -u _json_key --password-stdin https://gcr.io < gcp-key.json'
 
 Write-Host "Building and pushing Frontend image..."
 cd frontend
-docker build -t gcr.io/saws-lambda-legends-503718/saws-frontend:latest .
-docker push gcr.io/saws-lambda-legends-503718/saws-frontend:latest
+docker build -t gcr.io/saws-505203/saws-frontend:latest .
+docker push gcr.io/saws-505203/saws-frontend:latest
 cd ..
 
 Write-Host "Building and pushing Analytics Backend image..."
 cd backend
-docker build -t gcr.io/saws-lambda-legends-503718/saws-analytics:latest .
-docker push gcr.io/saws-lambda-legends-503718/saws-analytics:latest
+docker build -t gcr.io/saws-505203/saws-analytics:latest .
+docker push gcr.io/saws-505203/saws-analytics:latest
 cd ..
 
 Write-Host "Deploying infrastructure with Terraform..."

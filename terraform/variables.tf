@@ -27,7 +27,7 @@ variable "aws_session_token" {
 variable "lambda_role_arn" {
   type        = string
   description = "Existing AWS IAM role ARN used by Lambda functions in restricted lab accounts."
-  default     = "arn:aws:iam::839337112204:role/LabRole"
+  default     = "arn:aws:iam::857527815114:role/LabRole"
 }
 
 variable "gcp_project_id" {
