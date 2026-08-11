@@ -1,6 +1,6 @@
-const { config, memory, scanItems, putItem, mirrorToFirestore, hasGoogleRuntimeCredentials } = require('./store');
-const { createId, nowIso, requireSignedInContext } = require('./util');
-const { listServices } = require('./services');
+﻿const { config, memory, scanItems, putItem, mirrorToFirestore, hasGoogleRuntimeCredentials } = require('../lib/store');
+const { createId, nowIso, requireSignedInContext } = require('../lib/util');
+const { listServices } = require('../appointment-lambdas/services');
 
 let languageClient = null;
 if (hasGoogleRuntimeCredentials) {
@@ -150,3 +150,4 @@ async function analyticsSummary({ userId, role } = {}) {
 }
 
 module.exports = { analyzeSentiment, submitFeedback, feedbackSummary, analyticsSummary };
+

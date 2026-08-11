@@ -1,9 +1,7 @@
-const { assignConcernFromPubSub } = require('../service');
+﻿const { assignConcernFromPubSub } = require('./messages');
 
 exports.processMessage = async (event, context) => {
-  const message = event.data
-    ? Buffer.from(event.data, 'base64').toString()
-    : null;
+  const message = event.data ? Buffer.from(event.data, 'base64').toString() : null;
 
   if (message) {
     const data = JSON.parse(message);

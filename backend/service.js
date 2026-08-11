@@ -12,13 +12,13 @@ const {
   listPendingDoctors,
   decideDoctorApproval,
   updateDoctorSchedule
-} = require('./lib/users');
-const { listServices, upsertService } = require('./lib/services');
-const { bookAppointment, listAppointments, updateAppointment } = require('./lib/appointments');
-const { submitConcern, assignConcernFromPubSub, listMessages, replyToMessage } = require('./lib/messages');
-const { analyzeSentiment, submitFeedback, feedbackSummary, analyticsSummary } = require('./lib/feedback');
-const { chatbotReply } = require('./lib/chatbot');
-const { publishNotification } = require('./lib/notify');
+} = require('./auth-lambdas/users');
+const { listServices, upsertService } = require('./appointment-lambdas/services');
+const { bookAppointment, listAppointments, updateAppointment } = require('./appointment-lambdas/appointments');
+const { submitConcern, assignConcernFromPubSub, listMessages, replyToMessage } = require('./messaging-functions/messages');
+const { analyzeSentiment, submitFeedback, feedbackSummary, analyticsSummary } = require('./analytics/feedback');
+const { chatbotReply } = require('./chatbot-functions/chatbot');
+const { publishNotification } = require('./notifications-lambdas/notify');
 
 module.exports = {
   config,

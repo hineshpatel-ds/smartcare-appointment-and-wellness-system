@@ -1,4 +1,4 @@
-const { chatbotReply } = require('../service');
+﻿const { chatbotReply } = require('./chatbot');
 
 exports.dialogflowWebhook = async (req, res) => {
   try {

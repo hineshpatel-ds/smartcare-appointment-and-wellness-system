@@ -29,10 +29,25 @@ resource "aws_sqs_queue_policy" "appointment_requests" {
   })
 }
 
+resource "aws_sns_topic_subscription" "appointment_queue" {
+  topic_arn            = aws_sns_topic.notifications.arn
+  protocol             = "sqs"
+  endpoint             = aws_sqs_queue.appointment_requests.arn
+  raw_message_delivery = false
+}
+
 data "archive_file" "backend_zip" {
   type        = "zip"
   source_dir  = "${path.root}/../backend"
   output_path = "${path.module}/notifications-backend.zip"
+}
+
+# Table names are derived by convention instead of taking module outputs
+# from the appointment/auth modules, because the appointment module already
+# depends on this notifications module for its SQS/SNS ARNs -- taking a
+# reference back would create a circular module dependency.
+locals {
+  appointments_table_name = "${var.project_name}-appointments"
 }
 
 resource "aws_lambda_function" "process_sqs" {
@@ -46,8 +61,9 @@ resource "aws_lambda_function" "process_sqs" {
 
   environment {
     variables = {
-      PROJECT_NAME  = var.project_name
-      SNS_TOPIC_ARN = aws_sns_topic.notifications.arn
+      PROJECT_NAME       = var.project_name
+      SNS_TOPIC_ARN      = aws_sns_topic.notifications.arn
+      APPOINTMENTS_TABLE = local.appointments_table_name
     }
   }
 }
@@ -56,24 +72,6 @@ resource "aws_lambda_event_source_mapping" "appointment_queue" {
   event_source_arn = aws_sqs_queue.appointment_requests.arn
   function_name    = aws_lambda_function.process_sqs.arn
   batch_size       = 5
-}
-
-# SES identity for the sender address. AWS still requires the recipient to
-# click the verification email themselves -- Terraform can't complete that
-# step. While the account is in SES sandbox mode, recipient addresses also
-# need to be verified (or the account needs SES production access) before
-# mail actually lands in an inbox.
-resource "aws_ses_email_identity" "sender" {
-  count = var.ses_sender_email != "" ? 1 : 0
-  email = var.ses_sender_email
-}
-
-# Table names are derived by convention instead of taking module outputs
-# from the appointment/auth modules, because the appointment module already
-# depends on this notifications module for its SQS/SNS ARNs -- taking a
-# reference back would create a circular module dependency.
-locals {
-  appointments_table_name = "${var.project_name}-appointments"
 }
 
 resource "aws_lambda_function" "send_reminders" {
@@ -88,8 +86,8 @@ resource "aws_lambda_function" "send_reminders" {
   environment {
     variables = {
       PROJECT_NAME            = var.project_name
+      SNS_TOPIC_ARN           = aws_sns_topic.notifications.arn
       APPOINTMENTS_TABLE      = local.appointments_table_name
-      SES_SENDER_EMAIL        = var.ses_sender_email
       REMINDER_WINDOW_MINUTES = "30"
     }
   }
@@ -102,7 +100,7 @@ resource "aws_lambda_function" "send_reminders" {
 # have a trust policy for scheduler.amazonaws.com.
 resource "aws_cloudwatch_event_rule" "appointment_reminders" {
   name                = "${var.project_name}-appointment-reminders"
-  description         = "Periodically scans for upcoming confirmed appointments and sends reminder emails."
+  description         = "Periodically scans for upcoming confirmed appointments and sends reminder notifications through SNS."
   schedule_expression = "rate(15 minutes)"
 }
 

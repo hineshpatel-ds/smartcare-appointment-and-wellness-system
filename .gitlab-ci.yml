@@ -3,7 +3,7 @@
 #   GCP_SERVICE_ACCOUNT_KEY - GCP service account JSON key (docker push + terraform google provider)
 #   TF_BACKEND_CONFIG       - contents of a backend.hcl (see terraform/backend.hcl.example)
 #   TF_VAR_aws_access_key_id, TF_VAR_aws_secret_access_key, TF_VAR_aws_session_token - AWS creds for the aws provider
-#   TF_VAR_gcp_project_id, TF_VAR_ses_sender_email, TF_VAR_coordinator_* - see terraform/variables.tf
+#   TF_VAR_gcp_project_id, TF_VAR_coordinator_* - see terraform/variables.tf
 stages:
   - lint
   - test

@@ -1,4 +1,4 @@
-const { config, memory, scanItems, getItem, putItem, mirrorToFirestore, cognito } = require('./store');
+﻿const { config, memory, scanItems, getItem, putItem, mirrorToFirestore, cognito } = require('../lib/store');
 const {
   createId,
   nowIso,
@@ -6,9 +6,9 @@ const {
   caesarCipher,
   normalizeAnswer,
   requireCoordinatorContext
-} = require('./util');
-const { sendEmail } = require('./email');
-const { listServices } = require('./services');
+} = require('../lib/util');
+const { sendEmail } = require('../notifications-lambdas/email');
+const { listServices } = require('../appointment-lambdas/services');
 
 const DOCTOR_STATUS_MESSAGES = {
   PENDING_APPROVAL: 'Your doctor account is awaiting coordinator approval.',
@@ -19,6 +19,13 @@ function sanitizeUser(user) {
   if (!user) return null;
   const { passwordHash, securityAnswer, healthcareCodeEncrypted, cipherShift, ...safe } = user;
   return safe;
+}
+
+function buildCipherClue(encryptedCode) {
+  const value = String(encryptedCode || '');
+  if (!value) return 'Use the healthcare code created during registration.';
+  if (value.length <= 2) return `Caesar-shifted clue has ${value.length} character${value.length === 1 ? '' : 's'}.`;
+  return `Caesar-shifted clue: ${value[0]}${'*'.repeat(Math.max(1, value.length - 2))}${value[value.length - 1]} (${value.length} characters).`;
 }
 
 async function resolveSpecialtyNames(serviceIds = []) {
@@ -184,9 +191,7 @@ async function verifySecurityQuestion({ userId, answer }) {
   if (!user || user.securityAnswer !== normalizeAnswer(answer)) throw new Error('Invalid security answer');
   return {
     nextStage: 'caesar-cipher',
-    // The encrypted clue is shown so the user can decode it themselves; the
-    // shift itself is never returned so it can't just be read off the wire.
-    encryptedCode: user.healthcareCodeEncrypted
+    cipherClue: buildCipherClue(user.healthcareCodeEncrypted)
   };
 }
 
@@ -347,3 +352,6 @@ module.exports = {
   decideDoctorApproval,
   updateDoctorSchedule
 };
+
+
+

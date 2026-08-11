@@ -1,4 +1,4 @@
-﻿# SmartCare Appointment and Wellness System (SAWS)
+# SmartCare Appointment and Wellness System (SAWS)
 
 Live link: https://saws-ui-lfp7yothla-uc.a.run.app/ 
 
@@ -112,6 +112,20 @@ See `docs/api/api.md`, `docs/api/api-contract.md`, and `docs/api/swagger.yaml` f
 - Past appointment booking is rejected by both frontend validation and backend validation.
 - Cloud provider/API implementation details are not shown in the UI.
 
+## Email notifications
+
+SAWS sends notification emails through Amazon SNS and processes appointment notification events through Amazon SQS.
+
+Emails are published for:
+
+- patient registration success
+- doctor registration received and doctor approval decisions
+- successful login
+- appointment request received
+- appointment confirmed, rejected, or cancelled
+- appointment reminders before confirmed appointments
+
+The backend creates a recipient-specific SNS email topic when it first needs to notify an address, subscribes that email endpoint, and publishes the notification through SNS. AWS SNS email endpoints must confirm the AWS subscription email before they can receive delivered notifications. Appointment events are published to the shared SNS topic, delivered into SQS, and processed by the notification Lambda.
 ## Database mirroring
 
 SAWS mirrors records between DynamoDB and Firestore to demonstrate cross-cloud availability and reliability:

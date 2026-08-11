@@ -1,5 +1,5 @@
-import React from 'react';
-import { useAuth } from '../context/AuthContext';
+﻿import React from 'react';
+import { useAuth } from '../../context/AuthContext';
 import { PatientDashboard } from './PatientDashboard';
 import { DoctorDashboard } from './DoctorDashboard';
 import { CoordinatorDashboard } from './CoordinatorDashboard';
@@ -10,3 +10,4 @@ export function Dashboard() {
   if (user.role === 'coordinator') return <CoordinatorDashboard />;
   return <PatientDashboard />;
 }
+

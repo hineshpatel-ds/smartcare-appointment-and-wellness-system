@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+﻿import React, { useCallback, useEffect, useState } from 'react';
 import { Activity, Calendar, Send } from 'lucide-react';
-import { useApi, todayDate } from '../api/client';
-import { useAuth } from '../context/AuthContext';
-import { Field } from '../components/Field';
-import { StatusPill } from '../components/StatusPill';
+import { useApi, todayDate } from '../../api/client';
+import { useAuth } from '../../context/AuthContext';
+import { Field } from '../../components/Field';
+import { StatusPill } from '../../components/StatusPill';
 
 export function PatientDashboard() {
   const { request } = useApi();
@@ -185,3 +185,4 @@ export function PatientDashboard() {
     </section>
   );
 }
+

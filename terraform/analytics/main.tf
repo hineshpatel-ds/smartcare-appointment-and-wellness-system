@@ -96,10 +96,6 @@ resource "google_cloud_run_service" "api" {
           value = var.pubsub_topic
         }
         env {
-          name  = "SES_SENDER_EMAIL"
-          value = var.ses_sender_email
-        }
-        env {
           name  = "COORDINATOR_USER_ID"
           value = var.coordinator_user_id
         }

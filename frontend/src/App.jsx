@@ -4,10 +4,10 @@ import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Chatbot } from './components/Chatbot';
 import { RequireAuth } from './components/RequireAuth';
-import { LandingPage } from './pages/LandingPage';
-import { AuthPage } from './pages/AuthPage';
-import { Dashboard } from './pages/Dashboard';
-import { AnalyticsPage } from './pages/AnalyticsPage';
+import { LandingPage } from './modules/landing/LandingPage';
+import { AuthPage } from './modules/auth/AuthPage';
+import { Dashboard } from './modules/dashboard/Dashboard';
+import { AnalyticsPage } from './modules/analytics/AnalyticsPage';
 
 function App() {
   return (

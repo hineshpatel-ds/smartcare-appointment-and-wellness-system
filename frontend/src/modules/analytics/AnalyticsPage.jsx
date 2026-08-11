@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { Activity, Calendar, LogIn, ShieldCheck } from 'lucide-react';
-import { useApi } from '../api/client';
-import { useAuth } from '../context/AuthContext';
-import { Stat } from '../components/Stat';
+import { useApi } from '../../api/client';
+import { useAuth } from '../../context/AuthContext';
+import { Stat } from '../../components/Stat';
 
 const TITLES = {
   patient: 'My Activity',
@@ -94,3 +94,4 @@ export function AnalyticsPage() {
     </section>
   );
 }
+

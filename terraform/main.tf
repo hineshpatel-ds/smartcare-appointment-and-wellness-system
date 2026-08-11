@@ -1,8 +1,7 @@
 module "notifications" {
-  source           = "./notifications"
-  project_name     = var.project_name
-  lambda_role_arn  = var.lambda_role_arn
-  ses_sender_email = var.ses_sender_email
+  source          = "./notifications"
+  project_name    = var.project_name
+  lambda_role_arn = var.lambda_role_arn
 }
 
 module "auth" {
@@ -40,27 +39,25 @@ module "chatbot" {
 }
 
 module "analytics" {
-  source                = "./analytics"
-  project_name          = var.project_name
-  gcp_project_id        = var.gcp_project_id
-  gcp_region            = var.gcp_region
-  backend_image         = coalesce(var.backend_image, "gcr.io/${var.gcp_project_id}/${var.project_name}-analytics:latest")
-  aws_region            = var.aws_region
-  aws_access_key_id     = var.aws_access_key_id
-  aws_secret_access_key = var.aws_secret_access_key
-  aws_session_token     = var.aws_session_token
-  users_table           = module.auth.users_table_name
-  appointments_table    = module.appointment.appointments_table_name
-  messages_table        = module.messaging.messages_table_name
-  services_table        = module.appointment.services_table_name
-  login_stats_table     = module.auth.login_stats_table_name
-  cognito_user_pool_id  = module.auth.cognito_user_pool_id
-  cognito_client_id     = module.auth.cognito_client_id
-  sqs_queue_url         = module.notifications.sqs_queue_url
-  sns_topic_arn         = module.notifications.sns_topic_arn
-  pubsub_topic          = module.messaging.pubsub_topic_name
-
-  ses_sender_email              = var.ses_sender_email
+  source                        = "./analytics"
+  project_name                  = var.project_name
+  gcp_project_id                = var.gcp_project_id
+  gcp_region                    = var.gcp_region
+  backend_image                 = coalesce(var.backend_image, "gcr.io/${var.gcp_project_id}/${var.project_name}-analytics:latest")
+  aws_region                    = var.aws_region
+  aws_access_key_id             = var.aws_access_key_id
+  aws_secret_access_key         = var.aws_secret_access_key
+  aws_session_token             = var.aws_session_token
+  users_table                   = module.auth.users_table_name
+  appointments_table            = module.appointment.appointments_table_name
+  messages_table                = module.messaging.messages_table_name
+  services_table                = module.appointment.services_table_name
+  login_stats_table             = module.auth.login_stats_table_name
+  cognito_user_pool_id          = module.auth.cognito_user_pool_id
+  cognito_client_id             = module.auth.cognito_client_id
+  sqs_queue_url                 = module.notifications.sqs_queue_url
+  sns_topic_arn                 = module.notifications.sns_topic_arn
+  pubsub_topic                  = module.messaging.pubsub_topic_name
   coordinator_user_id           = var.coordinator_user_id
   coordinator_email             = var.coordinator_email
   coordinator_password          = var.coordinator_password

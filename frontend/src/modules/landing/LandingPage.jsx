@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { Activity } from 'lucide-react';
-import { useApi } from '../api/client';
-import { PackageCard } from '../components/PackageCard';
-import { DoctorCard } from '../components/DoctorCard';
+import { useApi } from '../../api/client';
+import { PackageCard } from '../../components/PackageCard';
+import { DoctorCard } from '../../components/DoctorCard';
 
 export function LandingPage() {
   const { request } = useApi();
@@ -40,10 +40,7 @@ export function LandingPage() {
         <div>
           <p className="eyebrow">Healthcare appointments and wellness support</p>
           <h1>SmartCare Appointment and Wellness System</h1>
-          <p>
-            Explore doctors and wellness packages, check availability, and see what other patients think &mdash; no
-            sign-in required. Register to book a consultation and track it end to end.
-          </p>
+          <p>Coordinated healthcare appointments, wellness services, and patient support in one secure system.</p>
         </div>
       </section>
 
@@ -53,7 +50,7 @@ export function LandingPage() {
         <div className="section-head">
           <div>
             <h2>Healthcare and Wellness Services</h2>
-            <p>Hover (or focus) a package to see the full clinician, timing, duration, and charge details.</p>
+            <p>Care options, specialists, timings, and service charges.</p>
           </div>
         </div>
         <div className="service-grid">
@@ -67,7 +64,7 @@ export function LandingPage() {
         <div className="section-head">
           <div>
             <h2>Doctors &amp; Specialists</h2>
-            <p>Approved specialists currently accepting appointments, with their weekly availability.</p>
+            <p>Approved specialists and current weekly availability.</p>
           </div>
         </div>
         <div className="service-grid">
@@ -82,7 +79,7 @@ export function LandingPage() {
         <div className="section-head">
           <div>
             <h2>Feedback &amp; Sentiment Overview</h2>
-            <p>Aggregated across every patient review, visible to everyone.</p>
+            <p>Recent service feedback and sentiment trends.</p>
           </div>
         </div>
         {feedbackSummary && feedbackSummary.totalReviews ? (
@@ -125,3 +122,6 @@ export function LandingPage() {
     </>
   );
 }
+
+
+

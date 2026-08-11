@@ -1,4 +1,4 @@
-const { sns, sqs, pubsub, config, hasGoogleRuntimeCredentials } = require('./store');
+const { sns, sqs, pubsub, config, hasGoogleRuntimeCredentials } = require('../lib/store');
 
 async function publishNotification(subject, message, payload = {}) {
   if (!config.snsTopicArn) return { skipped: true };
@@ -18,12 +18,32 @@ async function publishNotification(subject, message, payload = {}) {
 }
 
 async function enqueueAppointmentNotification(type, appointment) {
+  const payload = { type, appointment };
+
+  if (config.snsTopicArn) {
+    try {
+      await sns
+        .publish({
+          TopicArn: config.snsTopicArn,
+          Subject: `SAWS ${type.replace(/_/g, ' ').toLowerCase()}`,
+          Message: JSON.stringify(payload),
+          MessageAttributes: {
+            notificationType: { DataType: 'String', StringValue: type }
+          }
+        })
+        .promise();
+      return { published: true };
+    } catch (error) {
+      console.warn(`SNS appointment notification skipped: ${error.message}`);
+    }
+  }
+
   if (!config.sqsQueueUrl) return { skipped: true };
   try {
     await sqs
       .sendMessage({
         QueueUrl: config.sqsQueueUrl,
-        MessageBody: JSON.stringify({ type, appointment })
+        MessageBody: JSON.stringify(payload)
       })
       .promise();
     return { queued: true };

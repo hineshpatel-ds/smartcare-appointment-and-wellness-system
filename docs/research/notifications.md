@@ -1,4 +1,4 @@
-﻿# Notifications Module Research and Implementation
+# Notifications Module Research and Implementation
 
 ## Module scope
 
@@ -20,7 +20,7 @@ The final design uses SNS and SQS because the requirement specifically names AWS
 - Amazon SNS topic for notification publishing.
 - Amazon SQS queue for appointment notification events.
 - AWS Lambda handler in `backend/notifications-lambdas/process-sqs.js` for queued notification processing.
-- Cloud Run backend publishes registration, login, and appointment notification events.
+- Cloud Run backend publishes registration and login notifications to recipient-specific SNS email topics. Appointment events are published to the shared SNS topic, delivered to SQS, and processed by Lambda.
 
 ## Why SNS and SQS were chosen
 
@@ -41,10 +41,10 @@ Notification events:
 
 Backend behavior:
 
-- `registerUser` publishes registration notification events.
-- `startLogin` publishes sign-in notification events.
-- `bookAppointment` queues appointment request events.
-- `updateAppointment` queues status-change events.
+- `registerUser` publishes registration email notifications through SNS.
+- `verifyCipher` publishes successful sign-in email notifications through SNS after all authentication stages pass.
+- `bookAppointment` publishes appointment request events to SNS, which fans out to SQS.
+- `updateAppointment` publishes status-change events to SNS, which fans out to SQS.
 
 ## References
 

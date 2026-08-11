@@ -1,5 +1,5 @@
-const { config, memory, scanItems, putItem, mirrorToFirestore } = require('./store');
-const { createId, nowIso, requireCoordinatorContext } = require('./util');
+﻿const { config, memory, scanItems, putItem, mirrorToFirestore } = require('../lib/store');
+const { createId, nowIso, requireCoordinatorContext } = require('../lib/util');
 
 const defaultServices = [
   {
@@ -69,3 +69,4 @@ async function upsertService(service) {
 }
 
 module.exports = { defaultServices, listServices, getServiceById, upsertService };
+

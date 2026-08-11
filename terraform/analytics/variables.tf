@@ -25,10 +25,6 @@ variable "cognito_client_id" { type = string }
 variable "sqs_queue_url" { type = string }
 variable "sns_topic_arn" { type = string }
 variable "pubsub_topic" { type = string }
-variable "ses_sender_email" {
-  type    = string
-  default = ""
-}
 variable "coordinator_user_id" {
   type      = string
   default   = ""

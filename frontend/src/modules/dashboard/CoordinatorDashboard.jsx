@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+﻿import React, { useCallback, useEffect, useState } from 'react';
 import { Check, Plus, Send, X } from 'lucide-react';
-import { useApi } from '../api/client';
-import { useAuth } from '../context/AuthContext';
-import { Field } from '../components/Field';
-import { StatusPill } from '../components/StatusPill';
+import { useApi } from '../../api/client';
+import { useAuth } from '../../context/AuthContext';
+import { Field } from '../../components/Field';
+import { StatusPill } from '../../components/StatusPill';
 
 const emptyService = {
   name: '',
@@ -227,3 +227,4 @@ export function CoordinatorDashboard() {
     </section>
   );
 }
+

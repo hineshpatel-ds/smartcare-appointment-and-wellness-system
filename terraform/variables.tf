@@ -56,11 +56,6 @@ variable "backend_image" {
   default     = null
 }
 
-variable "ses_sender_email" {
-  type        = string
-  description = "Verified SES sender address used for all outbound SmartCare emails (registration, login, appointment, reminder). Empty disables real email sending."
-  default     = ""
-}
 
 variable "coordinator_user_id" {
   type        = string

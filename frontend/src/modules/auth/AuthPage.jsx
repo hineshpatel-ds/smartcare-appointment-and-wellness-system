@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, LogIn, ShieldCheck, UserPlus } from 'lucide-react';
-import { useApi } from '../api/client';
-import { useAuth } from '../context/AuthContext';
-import { Field } from '../components/Field';
+import { useApi } from '../../api/client';
+import { useAuth } from '../../context/AuthContext';
+import { Field } from '../../components/Field';
 
 const emptyRegister = {
   userId: '',
@@ -126,10 +126,7 @@ export function AuthPage() {
     <section className="section two-col auth-section">
       <div>
         <h2>Secure Access</h2>
-        <p>
-          Sign in with your password, answer your security question, and complete the healthcare code challenge.
-          Patients, doctors, and wellness coordinators all use the same 3-stage process.
-        </p>
+        <p>Secure access for patients, doctors, and wellness coordinators.</p>
         <div className="auth-tabs">
           <button className={mode === 'login' ? 'active' : ''} onClick={() => setMode('login')} type="button">
             <LogIn size={16} /> Sign in
@@ -200,6 +197,7 @@ export function AuthPage() {
             </Field>
             <Field label="Healthcare Code">
               <input
+                type="password"
                 value={register.healthcareCode}
                 onChange={(e) => setRegister({ ...register, healthcareCode: e.target.value })}
                 required
@@ -268,13 +266,10 @@ export function AuthPage() {
           )}
           {stage === 'cipher' && (
             <>
-              <p className="challenge">
-                Caesar cipher clue: <strong>{challenge?.encryptedCode}</strong>
-                <br />
-                Decode it with the shift you registered with, then enter your original healthcare code below.
-              </p>
+              <p className="challenge">{challenge?.cipherClue || 'Enter your healthcare code to continue.'}</p>
               <Field label="Healthcare code">
                 <input
+                  type="password"
                   value={loginForm.healthcareCode}
                   onChange={(e) => setLoginForm({ ...loginForm, healthcareCode: e.target.value })}
                   required
@@ -292,3 +287,6 @@ export function AuthPage() {
     </section>
   );
 }
+
+
+

@@ -1,6 +1,6 @@
-const { config, memory, scanItems, getItem, putItem, mirrorToFirestore } = require('./store');
-const { createId, nowIso, isUpcomingAppointmentSlot, requireSignedInContext } = require('./util');
-const { enqueueAppointmentNotification } = require('./notify');
+﻿const { config, memory, scanItems, getItem, putItem, mirrorToFirestore } = require('../lib/store');
+const { createId, nowIso, isUpcomingAppointmentSlot, requireSignedInContext } = require('../lib/util');
+const { enqueueAppointmentNotification } = require('../notifications-lambdas/notify');
 const { getServiceById } = require('./services');
 
 const ACTIVE_APPOINTMENT_STATUSES = ['PENDING_APPROVAL', 'CONFIRMED'];
@@ -107,3 +107,6 @@ async function updateAppointment(appointmentId, changes) {
 }
 
 module.exports = { bookAppointment, listAppointments, updateAppointment };
+
+
+

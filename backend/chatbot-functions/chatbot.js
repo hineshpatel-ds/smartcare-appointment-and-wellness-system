@@ -1,7 +1,7 @@
-const { config, memory, getItem } = require('./store');
-const { listServices } = require('./services');
-const { listAppointments } = require('./appointments');
-const { submitConcern } = require('./messages');
+﻿const { config, memory, getItem } = require('../lib/store');
+const { listServices } = require('../appointment-lambdas/services');
+const { listAppointments } = require('../appointment-lambdas/appointments');
+const { submitConcern } = require('../messaging-functions/messages');
 
 async function chatbotReply(input) {
   const message = String(input.message || '').toLowerCase();
@@ -64,3 +64,4 @@ async function chatbotReply(input) {
 }
 
 module.exports = { chatbotReply };
+

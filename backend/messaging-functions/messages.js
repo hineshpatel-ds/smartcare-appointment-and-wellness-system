@@ -1,6 +1,6 @@
-const { config, memory, scanItems, getItem, putItem, mirrorToFirestore } = require('./store');
-const { createId, nowIso, requireSignedInContext, requireCoordinatorContext } = require('./util');
-const { publishSupportConcern } = require('./notify');
+﻿const { config, memory, scanItems, getItem, putItem, mirrorToFirestore } = require('../lib/store');
+const { createId, nowIso, requireSignedInContext, requireCoordinatorContext } = require('../lib/util');
+const { publishSupportConcern } = require('../notifications-lambdas/notify');
 
 async function submitConcern(input) {
   if (!input.message) throw new Error('message is required');
@@ -65,3 +65,4 @@ async function replyToMessage(messageId, input) {
 }
 
 module.exports = { submitConcern, assignConcernFromPubSub, listMessages, replyToMessage };
+

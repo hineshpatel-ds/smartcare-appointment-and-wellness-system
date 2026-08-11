@@ -28,8 +28,7 @@ const config = {
   sqsQueueUrl: process.env.SQS_QUEUE_URL,
   snsTopicArn: process.env.SNS_TOPIC_ARN,
   pubsubTopic: process.env.PUBSUB_TOPIC || `${process.env.PROJECT_NAME || 'saws'}-support-concerns`,
-  enableMirror: process.env.ENABLE_DB_MIRRORING !== 'false',
-  sesSenderEmail: process.env.SES_SENDER_EMAIL
+  enableMirror: process.env.ENABLE_DB_MIRRORING !== 'false'
 };
 
 AWS.config.update({
@@ -42,7 +41,6 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const cognito = new AWS.CognitoIdentityServiceProvider();
 const sqs = new AWS.SQS();
 const sns = new AWS.SNS();
-const ses = new AWS.SES();
 const firestore = Firestore ? new Firestore() : null;
 const pubsub = PubSub ? new PubSub() : null;
 
@@ -134,7 +132,6 @@ module.exports = {
   cognito,
   sqs,
   sns,
-  ses,
   firestore,
   pubsub,
   hasGoogleRuntimeCredentials,

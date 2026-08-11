@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const { sendEmail } = require('../lib/email');
+const { sendAppointmentReminderEmails } = require('./email');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: process.env.AWS_REGION || 'us-east-1' });
 const REMINDER_WINDOW_MINUTES = Number(process.env.REMINDER_WINDOW_MINUTES || 30);
@@ -23,11 +23,7 @@ exports.handler = async () => {
   });
 
   for (const appointment of due) {
-    await sendEmail(
-      appointment.patientEmail,
-      'SAWS: Appointment reminder',
-      `<p>This is a reminder that your <b>${appointment.service}</b> appointment with ${appointment.doctorName || 'your specialist'} is coming up on ${appointment.date} at ${appointment.time}.</p>`
-    );
+    await sendAppointmentReminderEmails(appointment);
     await dynamoDb
       .update({
         TableName: table,
