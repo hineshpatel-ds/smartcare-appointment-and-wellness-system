@@ -7,6 +7,7 @@ Live application: https://saws-ui-5e5rwyweda-uc.a.run.app
 ## Table of Contents
 
 - [Overview](#overview)
+- [Team & Contributions](#team--contributions)
 - [Key Benefits](#key-benefits)
 - [Features](#features)
 - [Technology Stack](#technology-stack)
@@ -31,6 +32,19 @@ Current implementation deployment outputs:
 - Backend API: `https://saws-api-5e5rwyweda-uc.a.run.app`
 
 If Cloud Run services are recreated, use Terraform outputs or `gcloud run services describe` to get the latest URLs.
+
+## Team & Contributions
+
+SAWS was built by a six-person team for a Dalhousie course project. Each module was owned end-to-end (research, backend, infra, and docs) by one or more team members:
+
+- **Hinesh Patel** ([@hineshpatel-ds](https://github.com/hineshpatel-ds)) — Analytics & AI module: backend analytics and sentiment aggregation service, Docker/Terraform/CI infrastructure for the module, and supporting design docs.
+- **Devang Jalag** — Project setup and the appointment booking module: shared DynamoDB utilities, doctor listing/registration, appointment status workflows, architecture documentation, and repository/CI setup.
+- **Tarun Chauhan** — Frontend: all React dashboards and pages (login, signup, appointments, analytics, chatbot), frontend architecture, deployment CI/CD, and test coverage.
+- **Manavraj Thakor** — Messaging & Notifications module: AWS/GCP infrastructure, backend services, and security hardening (including fixing a Caesar-cipher exposure issue).
+- **Sriram Sundar** — Authentication module: AWS Cognito custom-auth Lambdas and the 3-stage login flow.
+- **Mostafaa Abdelaziz** — Chatbot module: backend chatbot service and research.
+
+This repository is mirrored from the team's original repository with the group's and instructor's permission.
 
 ## Key Benefits
 
